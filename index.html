@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Habitapocalypse v0.2</title>
+  <title>Habitapocalypse v0.3</title>
   <style>
     body {
       margin: 0;
@@ -14,11 +14,11 @@
       flex-direction: column;
       align-items: center;
       padding: 20px;
-      animation: glitch 5s infinite alternate; /* Doomshipped flicker */
+      animation: glitch 5s infinite alternate;
     }
     @keyframes glitch {
       0% { filter: brightness(1); }
-      2% { filter: brightness(0.8) hue-rotate(10deg); }
+      2% { filter: brightness(0.85) hue-rotate(10deg); }
       4% { filter: brightness(1); }
     }
     h1 {
@@ -31,6 +31,8 @@
       display: flex;
       gap: 20px;
       margin: 20px 0;
+      flex-wrap: wrap;
+      justify-content: center;
     }
     .stat {
       background: #0f1622;
@@ -76,23 +78,24 @@
       color: #80ffcc;
       font-weight: bold;
     }
-    #crisisPopup {
-      display: none;
+    .toast {
       position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: #0b0f14;
-      border: 2px solid #ff4040;
-      padding: 20px;
-      text-align: center;
-      box-shadow: 0 0 20px #ff4040;
-      z-index: 999;
-    }
-    #crisisPopup pre {
-      margin: 0;
-      font-size: 0.8rem;
+      bottom: 20px;
+      right: 20px;
+      background: #0f1622;
+      border: 1px solid #ff6b6b;
       color: #ff80bf;
+      padding: 12px 16px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px #ff4040;
+      opacity: 0;
+      transition: opacity 0.4s;
+      max-width: 240px;
+      font-size: 0.85rem;
+      z-index: 1000;
+    }
+    .toast.show {
+      opacity: 1;
     }
   </style>
 </head>
@@ -120,20 +123,7 @@
 
   <div class="log" id="log"></div>
 
-  <div id="crisisPopup">
-    <pre>
-  😢  404: Existential Crisis
-  ╔════════════════════╗
-  ║ 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥 ║
-  ║ 🔥  SERVER DOWN  🔥 ║
-  ║ 🔥  DOOMGUY: 💥  🔥 ║
-  ║ 🔥  BUGS: 🐞💀  🔥 ║
-  ║ 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥 ║
-  ╚════════════════════╝
-  Error: Purpose Not Found
-    </pre>
-    <button onclick="closeCrisis()">Panic Less</button>
-  </div>
+  <div id="toast" class="toast"></div>
 
   <script>
     let humanity = 100;
@@ -145,7 +135,7 @@
     let sleepStreak = 0;
 
     const log = document.getElementById("log");
-    const crisisPopup = document.getElementById("crisisPopup");
+    const toast = document.getElementById("toast");
 
     function updateUI() {
       document.getElementById("humanity").textContent = humanity;
@@ -154,10 +144,8 @@
       document.getElementById("burnout").textContent = burnout;
       document.getElementById("xp").textContent = xp;
       document.getElementById("title").textContent = `Title: ${title}`;
-      // Trigger 404 Crisis if Humanity hits 0
       if (humanity <= 0) {
-        crisisPopup.style.display = "block";
-        new Audio("https://freesound.org/data/previews/243/243020_4297721-lq.mp3").play(); // Glitchy MIDI
+        showToast("💀 ERROR: Humanity depleted. Welcome to Post-Human mode.");
         addLog("ERROR: Humanity depleted. Welcome to Post-Human mode.");
       }
     }
@@ -168,17 +156,17 @@
       log.prepend(p);
     }
 
+    function showToast(msg) {
+      toast.textContent = msg;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 3000);
+    }
+
     function checkTitle() {
       if (xp > 400) title = "Eternal Refactorer";
       else if (xp > 300) title = "Techno-Lich";
       else if (xp > 200) title = "Panic Coder";
       else if (xp > 100) title = "Sleep-Deprived Dev";
-    }
-
-    function closeCrisis() {
-      crisisPopup.style.display = "none";
-      addLog("Panic Less clicked. AI Comfort Protocol: You're not obsolete... yet.");
-      new Audio("https://freesound.org/data/previews/171/171671_2437721-lq.mp3").play(); // Cursed MIDI
     }
 
     function doAction(type) {
@@ -191,7 +179,7 @@
           sanity -= 15;
           obsol += 5;
           addLog(`Skipped sleep: +${50 + sleepBonus} XP, -10 Humanity, -15 Sanity, +5% Obsolescence${sleepStreak >= 3 ? " (Insomnia Multiplier!)" : ""}`);
-          if (sleepStreak === 5) addLog("Unlocked 'Zombie Coder' skin! Eyes glowing red.");
+          if (sleepStreak === 5) showToast("Unlocked 'Zombie Coder' skin! Eyes glowing red.");
           break;
         case 'eat':
           xp += 30;
@@ -199,7 +187,7 @@
           sanity -= 10;
           burnout += 5;
           addLog("Forgot to eat: +30 XP, -5 Humanity, -10 Sanity, +5 Burnout");
-          if (xp >= 150 && type === 'eat') addLog("Unlocked 'Soylent Skin'! Hunger is obsolete.");
+          if (xp >= 150) showToast("Unlocked 'Soylent Skin'! Hunger is obsolete.");
           break;
         case 'friends':
           xp += 100;
@@ -207,7 +195,7 @@
           sanity -= 20;
           obsol -= 5;
           addLog("Ignored friends: +100 XP, -20 Humanity, -20 Sanity, -5% Obsolescence");
-          if (xp >= 300 && type === 'friends') addLog("Earned 'Social 503: Service Unavailable' badge!");
+          if (xp >= 300) showToast("Earned 'Social 503: Service Unavailable' badge!");
           break;
         case 'deploy':
           xp += 70;
@@ -215,17 +203,14 @@
           obsol -= 10;
           burnout += 10;
           addLog("Committed to prod at 3AM: +70 XP, -25 Sanity, -10% Obsolescence, +10 Burnout");
-          if (Math.random() < 0.01) {
-            crisisPopup.style.display = "block";
-            addLog("PROD APOCALYPSE! App crashed. Good luck.");
-          }
+          if (Math.random() < 0.02) showToast("🔥 PROD APOCALYPSE! App crashed. Good luck.");
           break;
         case 'doomscroll':
           xp += 60;
           sanity -= 15;
           obsol += 10;
           addLog("Doomscrolled X: +60 XP, -15 Sanity, +10% Obsolescence");
-          if (Math.random() < 0.3) addLog("Cacodemon Bug spawned! Debug or lose 10 Humanity.");
+          if (Math.random() < 0.2) showToast("👾 Cacodemon Bug spawned! Debug or lose 10 Humanity.");
           break;
       }
       if (humanity < 0) humanity = 0;
@@ -238,8 +223,7 @@
     }
 
     updateUI();
-    // Cursed init comment: Riley was doomscrolling when they wrote this
-    console.log("Habitapocalypse v0.2: Why sleep when you can ship?");
+    console.log("Habitapocalypse v0.3: ship fast, sleep never");
   </script>
 </body>
 </html>
