@@ -11,29 +11,46 @@
       background: #0b0f14;
       color: #e8f1ff;
       display: flex;
-      flex-direction: column;
-      align-items: center;
+      justify-content: center;
       padding: 20px;
       transition: background 1s;
     }
+
+    #gameContainer {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      transition: transform 0.1s;
+      animation: bgCorruption 10s infinite alternate;
+    }
+
     @keyframes bgCorruption {
       0% { filter: brightness(1); }
       75% { filter: brightness(0.9) hue-rotate(20deg); }
       100% { filter: brightness(0.7) hue-rotate(180deg); }
     }
+
     @keyframes shake {
-      0% { transform: translate(0, 0); }
-      25% { transform: translate(var(--jitter-x), var(--jitter-y)); }
-      50% { transform: translate(var(--jitter-x-neg), var(--jitter-y-neg)); }
-      75% { transform: translate(var(--jitter-x), var(--jitter-y-neg)); }
-      100% { transform: translate(0, 0); }
+      0% { transform: translate(0,0); }
+      20% { transform: translate(var(--jitter-x), var(--jitter-y)); }
+      40% { transform: translate(var(--jitter-x-neg), var(--jitter-y-neg)); }
+      60% { transform: translate(var(--jitter-x), var(--jitter-y-neg)); }
+      80% { transform: translate(var(--jitter-x-neg), var(--jitter-y)); }
+      100% { transform: translate(0,0); }
     }
+
+    .shake {
+      animation: shake 0.1s infinite;
+    }
+
     h1 {
       font-size: 2rem;
       margin-bottom: 0.5rem;
       color: #ff80bf;
       text-shadow: 0 0 8px #ff80bf;
     }
+
     .stats {
       display: flex;
       gap: 20px;
@@ -41,6 +58,7 @@
       flex-wrap: wrap;
       justify-content: center;
     }
+
     .stat {
       background: #0f1622;
       border: 1px solid #1f2a3a;
@@ -49,17 +67,20 @@
       text-align: center;
       min-width: 90px;
     }
+
     .avatar {
       margin: 10px 0;
       font-size: 1.5rem;
       transition: color 0.5s;
     }
+
     .buttons {
       display: grid;
       gap: 12px;
       max-width: 400px;
       width: 100%;
     }
+
     button {
       background: #0f1622;
       color: #e8f1ff;
@@ -69,10 +90,12 @@
       cursor: pointer;
       transition: border-color 0.2s, box-shadow 0.2s;
     }
+
     button:hover {
       border-color: #ff80bf;
       box-shadow: 0 0 12px #ff80bf;
     }
+
     .log {
       margin-top: 20px;
       background: #091019;
@@ -85,11 +108,13 @@
       overflow-y: auto;
       font-size: 0.9rem;
     }
+
     .title {
       margin-top: 10px;
       color: #80ffcc;
       font-weight: bold;
     }
+
     .toast {
       position: fixed;
       bottom: 20px;
@@ -106,9 +131,11 @@
       font-size: 0.85rem;
       z-index: 1000;
     }
+
     .toast.show {
       opacity: 1;
     }
+
     #crisisPopup {
       display: none;
       position: fixed;
@@ -122,16 +149,19 @@
       box-shadow: 0 0 20px #ff4040;
       z-index: 999;
     }
+
     #crisisPopup pre {
       margin: 0;
       font-size: 0.8rem;
       color: #ff80bf;
       animation: flicker 0.1s infinite alternate;
     }
+
     @keyframes flicker {
       0% { opacity: 1; }
       100% { opacity: 0.9; }
     }
+
     .achievements {
       position: fixed;
       top: 20px;
@@ -146,37 +176,37 @@
   </style>
 </head>
 <body>
-  <h1>☠︎ Habitapocalypse</h1>
-  <p><em>Level up your burnout. Humanity is the debuff.</em></p>
+  <div id="gameContainer">
+    <h1>☠︎ Habitapocalypse</h1>
+    <p><em>Level up your burnout. Humanity is the debuff.</em></p>
 
-  <div class="avatar" id="avatar">Avatar: 🙂</div>
+    <div class="avatar" id="avatar">Avatar: 🙂</div>
 
-  <div class="stats">
-    <div class="stat">Humanity<br><span id="humanity">100</span>%</div>
-    <div class="stat">Obsolescence<br><span id="obsol">50</span>%</div>
-    <div class="stat">Sanity<br><span id="sanity">100</span></div>
-    <div class="stat">Burnout<br><span id="burnout">0</span></div>
-    <div class="stat">XP<br><span id="xp">0</span></div>
-    <div class="stat">Coffee<br><span id="coffee">0</span></div>
-  </div>
+    <div class="stats">
+      <div class="stat">Humanity<br><span id="humanity">100</span>%</div>
+      <div class="stat">Obsolescence<br><span id="obsol">50</span>%</div>
+      <div class="stat">Sanity<br><span id="sanity">100</span></div>
+      <div class="stat">Burnout<br><span id="burnout">0</span></div>
+      <div class="stat">XP<br><span id="xp">0</span></div>
+      <div class="stat">Coffee<br><span id="coffee">0</span></div>
+    </div>
 
-  <div class="buttons">
-    <button onclick="doAction('sleep')">😴 Skip Sleep</button>
-    <button onclick="doAction('eat')">🍕 Forget to Eat</button>
-    <button onclick="doAction('friends')">🙅 Ignore Friends</button>
-    <button onclick="doAction('deploy')">💻 Commit to Prod at 3AM</button>
-    <button onclick="doAction('doomscroll')">📱 Doomscroll X</button>
-    <button onclick="doAction('refactor')">🔧 Rage-Refactor</button>
-    <button onclick="doAction('legacy')">💾 Legacy Code Hell</button>
-    <button onclick="doAction('coffee')">☕ Drink Coffee</button>
-  </div>
+    <div class="buttons">
+      <button onclick="doAction('sleep')">😴 Skip Sleep</button>
+      <button onclick="doAction('eat')">🍕 Forget to Eat</button>
+      <button onclick="doAction('friends')">🙅 Ignore Friends</button>
+      <button onclick="doAction('deploy')">💻 Commit to Prod at 3AM</button>
+      <button onclick="doAction('doomscroll')">📱 Doomscroll X</button>
+      <button onclick="doAction('refactor')">🔧 Rage-Refactor</button>
+      <button onclick="doAction('legacy')">💾 Legacy Code Hell</button>
+      <button onclick="doAction('coffee')">☕ Drink Coffee</button>
+    </div>
 
-  <div class="title" id="title">Title: Junior Doomshipper</div>
+    <div class="title" id="title">Title: Junior Doomshipper</div>
+    <div class="log" id="log"></div>
 
-  <div class="log" id="log"></div>
-
-  <div id="crisisPopup">
-    <pre>
+    <div id="crisisPopup">
+      <pre>
   😢  404: Existential Crisis
   ╔════════════════════╗
   ║ 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥 ║
@@ -187,13 +217,13 @@
   ║ 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥 ║
   ╚════════════════════╝
   Error: Purpose Not Found. Refactor soul?
-    </pre>
-    <button onclick="closeCrisis()">Panic Less</button>
+      </pre>
+      <button onclick="closeCrisis()">Panic Less</button>
+    </div>
+
+    <div id="toast" class="toast"></div>
+    <div class="achievements" id="achievements"></div>
   </div>
-
-  <div id="toast" class="toast"></div>
-
-  <div class="achievements" id="achievements"></div>
 
   <script>
     let humanity = 100;
@@ -214,6 +244,7 @@
     const avatar = document.getElementById("avatar");
     const achievementsDiv = document.getElementById("achievements");
     const coffeeStat = document.getElementById("coffee");
+    const gameContainer = document.getElementById("gameContainer");
 
     function updateUI() {
       document.getElementById("humanity").textContent = humanity;
@@ -223,21 +254,23 @@
       document.getElementById("xp").textContent = xp;
       document.getElementById("title").textContent = `Title: ${title}`;
       coffeeStat.textContent = coffeeCount;
-      // Avatar mutation
+
       if (humanity <= 0 || sanity <= 0) avatar.textContent = "Avatar: 💀";
       else if (humanity <= 50 || sanity <= 50) avatar.textContent = "Avatar: 😵";
       else avatar.textContent = "Avatar: 🙂";
+
       avatar.style.color = humanity <= 0 ? "#ff4040" : sanity <= 0 ? "#ff80bf" : "#e8f1ff";
-      // Background corruption
-      document.body.style.animation = obsol >= 75 ? `shake ${0.5 - (jitterLevel * 0.1)}s infinite, bgCorruption 10s infinite alternate` : "bgCorruption 10s infinite alternate";
-      if (obsol >= 100) document.body.style.background = "#1a0f0f";
-      // Jitter customization
-      const jitterX = jitterLevel >= 3 ? 5 : jitterLevel >= 1 ? 2 : 0;
-      const jitterY = jitterLevel >= 3 ? 5 : jitterLevel >= 1 ? 2 : 0;
+
+      // Apply jitter
+      const jitterX = jitterLevel >= 3 ? 8 : jitterLevel >= 2 ? 4 : jitterLevel >= 1 ? 2 : 0;
+      const jitterY = jitterLevel >= 3 ? 8 : jitterLevel >= 2 ? 4 : jitterLevel >= 1 ? 2 : 0;
       document.body.style.setProperty('--jitter-x', `${jitterX}px`);
       document.body.style.setProperty('--jitter-x-neg', `-${jitterX}px`);
       document.body.style.setProperty('--jitter-y', `${jitterY}px`);
       document.body.style.setProperty('--jitter-y-neg', `-${jitterY}px`);
+      if (jitterLevel > 0) gameContainer.classList.add("shake");
+      else gameContainer.classList.remove("shake");
+
       // Achievements
       achievementsDiv.innerHTML = achievements.map(ach => `<div>${ach}</div>`).join("");
     }
@@ -264,7 +297,7 @@
     function closeCrisis() {
       crisisPopup.style.display = "none";
       showToastAndLog("AI Rickroll Protocol: You're not obsolete... yet.");
-      new Audio("https://freesound.org/data/previews/171/171671_2437721-lq.mp3").play(); // Never Gonna Give You Up MIDI
+      new Audio("https://freesound.org/data/previews/171/171671_2437721-lq.mp3").play();
     }
 
     function checkTitle() {
@@ -355,7 +388,7 @@
           break;
         case 'coffee':
           coffeeCount++;
-          jitterLevel = Math.floor(coffeeCount / 1); // Increment jitter level per cup
+          jitterLevel = Math.min(Math.floor(coffeeCount / 1), 5);
           xp += 40;
           sanity -= 5;
           burnout += 10;
@@ -366,20 +399,22 @@
           }
           break;
       }
+
       if (xp >= 300 && !achievements.includes("🖥️ Techno-Lich Ascended")) {
         showAsciiBanner("🖥️ Techno-Lich Ascended\n╔════════════╗\n║ 💀🔥ASCEND🔥💀 ║\n╚════════════╝");
       }
+
       if (humanity < 0) humanity = 0;
       if (sanity < 0) sanity = 0;
       if (obsol < 0) obsol = 0;
       if (obsol > 100) obsol = 100;
       burnout = Math.min(burnout, 100);
+
       checkTitle();
       updateUI();
     }
 
     updateUI();
-    // Cursed comment: Riley chugged 3 coffees coding this at 4:45 AM
     console.log("Habitapocalypse v0.6: Coffee is the new code fuel");
   </script>
 </body>
