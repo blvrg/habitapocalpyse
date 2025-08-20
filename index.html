@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Habitapocalypse v0.1</title>
+  <title>Habitapocalypse v0.2</title>
   <style>
     body {
       margin: 0;
@@ -14,11 +14,18 @@
       flex-direction: column;
       align-items: center;
       padding: 20px;
+      animation: glitch 5s infinite alternate; /* Doomshipped flicker */
+    }
+    @keyframes glitch {
+      0% { filter: brightness(1); }
+      2% { filter: brightness(0.8) hue-rotate(10deg); }
+      4% { filter: brightness(1); }
     }
     h1 {
       font-size: 2rem;
       margin-bottom: 0.5rem;
       color: #ff80bf;
+      text-shadow: 0 0 5px #ff80bf;
     }
     .stats {
       display: flex;
@@ -46,9 +53,11 @@
       padding: 10px;
       border-radius: 10px;
       cursor: pointer;
+      transition: border-color 0.2s;
     }
     button:hover {
-      border-color: #3b5274;
+      border-color: #ff80bf;
+      box-shadow: 0 0 10px #ff80bf;
     }
     .log {
       margin-top: 20px;
@@ -67,6 +76,24 @@
       color: #80ffcc;
       font-weight: bold;
     }
+    #crisisPopup {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #0b0f14;
+      border: 2px solid #ff4040;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 0 20px #ff4040;
+      z-index: 999;
+    }
+    #crisisPopup pre {
+      margin: 0;
+      font-size: 0.8rem;
+      color: #ff80bf;
+    }
   </style>
 </head>
 <body>
@@ -77,6 +104,7 @@
     <div class="stat">Humanity<br><span id="humanity">100</span>%</div>
     <div class="stat">Obsolescence<br><span id="obsol">50</span>%</div>
     <div class="stat">Sanity<br><span id="sanity">100</span></div>
+    <div class="stat">Burnout<br><span id="burnout">0</span></div>
     <div class="stat">XP<br><span id="xp">0</span></div>
   </div>
 
@@ -85,27 +113,53 @@
     <button onclick="doAction('eat')">🍕 Forget to Eat</button>
     <button onclick="doAction('friends')">🙅 Ignore Friends</button>
     <button onclick="doAction('deploy')">💻 Commit to Prod at 3AM</button>
+    <button onclick="doAction('doomscroll')">📱 Doomscroll X</button>
   </div>
 
   <div class="title" id="title">Title: Junior Doomshipper</div>
 
   <div class="log" id="log"></div>
 
+  <div id="crisisPopup">
+    <pre>
+  😢  404: Existential Crisis
+  ╔════════════════════╗
+  ║ 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥 ║
+  ║ 🔥  SERVER DOWN  🔥 ║
+  ║ 🔥  DOOMGUY: 💥  🔥 ║
+  ║ 🔥  BUGS: 🐞💀  🔥 ║
+  ║ 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥 ║
+  ╚════════════════════╝
+  Error: Purpose Not Found
+    </pre>
+    <button onclick="closeCrisis()">Panic Less</button>
+  </div>
+
   <script>
     let humanity = 100;
     let obsol = 50;
     let sanity = 100;
+    let burnout = 0;
     let xp = 0;
     let title = "Junior Doomshipper";
+    let sleepStreak = 0;
 
     const log = document.getElementById("log");
+    const crisisPopup = document.getElementById("crisisPopup");
 
     function updateUI() {
       document.getElementById("humanity").textContent = humanity;
       document.getElementById("obsol").textContent = obsol;
       document.getElementById("sanity").textContent = sanity;
+      document.getElementById("burnout").textContent = burnout;
       document.getElementById("xp").textContent = xp;
       document.getElementById("title").textContent = `Title: ${title}`;
+      // Trigger 404 Crisis if Humanity hits 0
+      if (humanity <= 0) {
+        crisisPopup.style.display = "block";
+        new Audio("https://freesound.org/data/previews/243/243020_4297721-lq.mp3").play(); // Glitchy MIDI
+        addLog("ERROR: Humanity depleted. Welcome to Post-Human mode.");
+      }
     }
 
     function addLog(msg) {
@@ -115,34 +169,77 @@
     }
 
     function checkTitle() {
-      if (xp > 300) title = "Techno-Lich";
+      if (xp > 400) title = "Eternal Refactorer";
+      else if (xp > 300) title = "Techno-Lich";
       else if (xp > 200) title = "Panic Coder";
       else if (xp > 100) title = "Sleep-Deprived Dev";
+    }
+
+    function closeCrisis() {
+      crisisPopup.style.display = "none";
+      addLog("Panic Less clicked. AI Comfort Protocol: You're not obsolete... yet.");
+      new Audio("https://freesound.org/data/previews/171/171671_2437721-lq.mp3").play(); // Cursed MIDI
     }
 
     function doAction(type) {
       switch(type) {
         case 'sleep':
-          xp += 50; humanity -= 10; sanity -= 15; addLog("Skipped sleep: +50 XP, -10 Humanity, -15 Sanity");
+          sleepStreak++;
+          let sleepBonus = sleepStreak >= 3 ? 10 * sleepStreak : 0;
+          xp += 50 + sleepBonus;
+          humanity -= 10;
+          sanity -= 15;
+          obsol += 5;
+          addLog(`Skipped sleep: +${50 + sleepBonus} XP, -10 Humanity, -15 Sanity, +5% Obsolescence${sleepStreak >= 3 ? " (Insomnia Multiplier!)" : ""}`);
+          if (sleepStreak === 5) addLog("Unlocked 'Zombie Coder' skin! Eyes glowing red.");
           break;
         case 'eat':
-          xp += 30; humanity -= 5; sanity -= 10; addLog("Forgot to eat: +30 XP, -5 Humanity, -10 Sanity");
+          xp += 30;
+          humanity -= 5;
+          sanity -= 10;
+          burnout += 5;
+          addLog("Forgot to eat: +30 XP, -5 Humanity, -10 Sanity, +5 Burnout");
+          if (xp >= 150 && type === 'eat') addLog("Unlocked 'Soylent Skin'! Hunger is obsolete.");
           break;
         case 'friends':
-          xp += 100; humanity -= 20; sanity -= 20; obsol -= 5; addLog("Ignored friends: +100 XP, -20 Humanity, -20 Sanity, -5% Obsolescence");
+          xp += 100;
+          humanity -= 20;
+          sanity -= 20;
+          obsol -= 5;
+          addLog("Ignored friends: +100 XP, -20 Humanity, -20 Sanity, -5% Obsolescence");
+          if (xp >= 300 && type === 'friends') addLog("Earned 'Social 503: Service Unavailable' badge!");
           break;
         case 'deploy':
-          xp += 70; sanity -= 25; obsol -= 10; addLog("Committed to prod at 3AM: +70 XP, -25 Sanity, -10% Obsolescence");
+          xp += 70;
+          sanity -= 25;
+          obsol -= 10;
+          burnout += 10;
+          addLog("Committed to prod at 3AM: +70 XP, -25 Sanity, -10% Obsolescence, +10 Burnout");
+          if (Math.random() < 0.01) {
+            crisisPopup.style.display = "block";
+            addLog("PROD APOCALYPSE! App crashed. Good luck.");
+          }
+          break;
+        case 'doomscroll':
+          xp += 60;
+          sanity -= 15;
+          obsol += 10;
+          addLog("Doomscrolled X: +60 XP, -15 Sanity, +10% Obsolescence");
+          if (Math.random() < 0.3) addLog("Cacodemon Bug spawned! Debug or lose 10 Humanity.");
           break;
       }
       if (humanity < 0) humanity = 0;
       if (sanity < 0) sanity = 0;
       if (obsol < 0) obsol = 0;
+      if (obsol > 100) obsol = 100;
+      burnout = Math.min(burnout, 100);
       checkTitle();
       updateUI();
     }
 
     updateUI();
+    // Cursed init comment: Riley was doomscrolling when they wrote this
+    console.log("Habitapocalypse v0.2: Why sleep when you can ship?");
   </script>
 </body>
 </html>
