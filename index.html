@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Habitapocalypse v0.3</title>
+  <title>Habitapocalypse v0.4</title>
   <style>
     body {
       margin: 0;
@@ -14,18 +14,18 @@
       flex-direction: column;
       align-items: center;
       padding: 20px;
-      animation: glitch 5s infinite alternate;
+      animation: glitch 4s infinite alternate;
     }
     @keyframes glitch {
       0% { filter: brightness(1); }
-      2% { filter: brightness(0.85) hue-rotate(10deg); }
+      2% { filter: brightness(0.8) hue-rotate(15deg); }
       4% { filter: brightness(1); }
     }
     h1 {
       font-size: 2rem;
       margin-bottom: 0.5rem;
       color: #ff80bf;
-      text-shadow: 0 0 5px #ff80bf;
+      text-shadow: 0 0 8px #ff80bf;
     }
     .stats {
       display: flex;
@@ -55,11 +55,11 @@
       padding: 10px;
       border-radius: 10px;
       cursor: pointer;
-      transition: border-color 0.2s;
+      transition: border-color 0.2s, box-shadow 0.2s;
     }
     button:hover {
       border-color: #ff80bf;
-      box-shadow: 0 0 10px #ff80bf;
+      box-shadow: 0 0 12px #ff80bf;
     }
     .log {
       margin-top: 20px;
@@ -97,6 +97,29 @@
     .toast.show {
       opacity: 1;
     }
+    #crisisPopup {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #0b0f14;
+      border: 2px solid #ff4040;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 0 20px #ff4040;
+      z-index: 999;
+    }
+    #crisisPopup pre {
+      margin: 0;
+      font-size: 0.8rem;
+      color: #ff80bf;
+      animation: flicker 0.1s infinite alternate;
+    }
+    @keyframes flicker {
+      0% { opacity: 1; }
+      100% { opacity: 0.9; }
+    }
   </style>
 </head>
 <body>
@@ -117,11 +140,28 @@
     <button onclick="doAction('friends')">🙅 Ignore Friends</button>
     <button onclick="doAction('deploy')">💻 Commit to Prod at 3AM</button>
     <button onclick="doAction('doomscroll')">📱 Doomscroll X</button>
+    <button onclick="doAction('refactor')">🔧 Rage-Refactor</button>
   </div>
 
   <div class="title" id="title">Title: Junior Doomshipper</div>
 
   <div class="log" id="log"></div>
+
+  <div id="crisisPopup">
+    <pre>
+  😢  404: Existential Crisis
+  ╔════════════════════╗
+  ║ 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥 ║
+  ║ 🔥  SERVER MELTDOWN 🔥 ║
+  ║ 🔥  DOOMGUY: 💥🔫 🔥 ║
+  ║ 🔥  BUGS: 🐞💀💀 🔥 ║
+  ║ 🔥  DATA VOID: ∅  🔥 ║
+  ║ 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥 ║
+  ╚════════════════════╝
+  Error: Purpose Not Found. Refactor soul?
+    </pre>
+    <button onclick="closeCrisis()">Panic Less</button>
+  </div>
 
   <div id="toast" class="toast"></div>
 
@@ -133,9 +173,11 @@
     let xp = 0;
     let title = "Junior Doomshipper";
     let sleepStreak = 0;
+    let doomscrollStreak = 0;
 
     const log = document.getElementById("log");
     const toast = document.getElementById("toast");
+    const crisisPopup = document.getElementById("crisisPopup");
 
     function updateUI() {
       document.getElementById("humanity").textContent = humanity;
@@ -145,9 +187,11 @@
       document.getElementById("xp").textContent = xp;
       document.getElementById("title").textContent = `Title: ${title}`;
       if (humanity <= 0) {
+        crisisPopup.style.display = "block";
         showToast("💀 ERROR: Humanity depleted. Welcome to Post-Human mode.");
-        addLog("ERROR: Humanity depleted. Welcome to Post-Human mode.");
+        new Audio("https://freesound.org/data/previews/243/243020_4297721-lq.mp3").play(); // Glitchy MIDI
       }
+      if (sanity <= -100) showToast("⚠️ Error: Null Soul detected. UI glitching...");
     }
 
     function addLog(msg) {
@@ -162,8 +206,15 @@
       setTimeout(() => toast.classList.remove("show"), 3000);
     }
 
+    function closeCrisis() {
+      crisisPopup.style.display = "none";
+      showToast("AI Rickroll Protocol: You're not obsolete... yet.");
+      new Audio("https://freesound.org/data/previews/171/171671_2437721-lq.mp3").play(); // Never Gonna Give You Up MIDI
+    }
+
     function checkTitle() {
-      if (xp > 400) title = "Eternal Refactorer";
+      if (xp > 500) title = "Singularity Sovereign";
+      else if (xp > 400) title = "Eternal Refactorer";
       else if (xp > 300) title = "Techno-Lich";
       else if (xp > 200) title = "Panic Coder";
       else if (xp > 100) title = "Sleep-Deprived Dev";
@@ -178,8 +229,9 @@
           humanity -= 10;
           sanity -= 15;
           obsol += 5;
+          burnout += 5;
           addLog(`Skipped sleep: +${50 + sleepBonus} XP, -10 Humanity, -15 Sanity, +5% Obsolescence${sleepStreak >= 3 ? " (Insomnia Multiplier!)" : ""}`);
-          if (sleepStreak === 5) showToast("Unlocked 'Zombie Coder' skin! Eyes glowing red.");
+          if (sleepStreak === 7) showToast("😴💉 Unlocked 'Red Bull Veins' skin! Sleep is for humans. You're not.");
           break;
         case 'eat':
           xp += 30;
@@ -187,7 +239,7 @@
           sanity -= 10;
           burnout += 5;
           addLog("Forgot to eat: +30 XP, -5 Humanity, -10 Sanity, +5 Burnout");
-          if (xp >= 150) showToast("Unlocked 'Soylent Skin'! Hunger is obsolete.");
+          if (xp >= 150 && type === 'eat') showToast("🍵 Unlocked 'Soylent Skin'! Hunger is obsolete.");
           break;
         case 'friends':
           xp += 100;
@@ -195,7 +247,7 @@
           sanity -= 20;
           obsol -= 5;
           addLog("Ignored friends: +100 XP, -20 Humanity, -20 Sanity, -5% Obsolescence");
-          if (xp >= 300) showToast("Earned 'Social 503: Service Unavailable' badge!");
+          if (xp >= 300 && type === 'friends') showToast("🚫 Earned 'Social 503: Service Unavailable' badge!");
           break;
         case 'deploy':
           xp += 70;
@@ -203,14 +255,29 @@
           obsol -= 10;
           burnout += 10;
           addLog("Committed to prod at 3AM: +70 XP, -25 Sanity, -10% Obsolescence, +10 Burnout");
-          if (Math.random() < 0.02) showToast("🔥 PROD APOCALYPSE! App crashed. Good luck.");
+          if (Math.random() < 0.02) {
+            crisisPopup.style.display = "block";
+            showToast("🔥 PROD APOCALYPSE! App crashed. Good luck.");
+          }
           break;
         case 'doomscroll':
-          xp += 60;
+          doomscrollStreak++;
+          let scrollBonus = doomscrollStreak >= 2 ? 20 * doomscrollStreak : 0;
+          xp += 60 + scrollBonus;
           sanity -= 15;
           obsol += 10;
-          addLog("Doomscrolled X: +60 XP, -15 Sanity, +10% Obsolescence");
-          if (Math.random() < 0.2) showToast("👾 Cacodemon Bug spawned! Debug or lose 10 Humanity.");
+          addLog(`Doomscrolled X: +${60 + scrollBonus} XP, -15 Sanity, +10% Obsolescence${doomscrollStreak >= 2 ? " (Doomscroll Frenzy!)" : ""}`);
+          if (Math.random() < 0.2) {
+            showToast("👾 Cacodemon Bug spawned! Debug or lose 10 Humanity.");
+            humanity -= 10;
+          }
+          break;
+        case 'refactor':
+          xp += 80;
+          sanity -= 30;
+          burnout += 15;
+          addLog("Rage-Refactored: +80 XP, -30 Sanity, +15 Burnout");
+          if (Math.random() < 0.1) showToast("💇 Unlocked 'Null Pointer Hair'! Refactored into the void.");
           break;
       }
       if (humanity < 0) humanity = 0;
@@ -223,7 +290,8 @@
     }
 
     updateUI();
-    console.log("Habitapocalypse v0.3: ship fast, sleep never");
+    // Cursed comment: Riley's soul was outsourced to the cloud during this sprint
+    console.log("Habitapocalypse v0.4: Code like the singularity is tomorrow");
   </script>
 </body>
 </html>
