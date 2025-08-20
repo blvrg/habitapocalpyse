@@ -1,357 +1,148 @@
 <!doctype html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Doomshipping Manifesto</title>
-        <style>
-            :root {
-                --bg: #0b0f14;
-                --panel: #0f1622;
-                --ink: #e8f1ff;
-                --mute: #95a3b8;
-                --accent: #80ffcc;
-                --accent2: #ff80bf;
-                --warn: #ffdd55;
-                --danger: #ff6b6b;
-            }
-            * {
-                box-sizing: border-box;
-            }
-            html,
-            body {
-                height: 100%;
-            }
-            body {
-                margin: 0;
-                font-family:
-                    ui-monospace, SFMono-Regular, Menlo, Consolas,
-                    "Liberation Mono", monospace;
-                background:
-                    radial-gradient(
-                        1200px 800px at 80% -10%,
-                        #132032,
-                        transparent 60%
-                    ),
-                    var(--bg);
-                color: var(--ink);
-                line-height: 1.6;
-                letter-spacing: 0.2px;
-            }
-            .wrap {
-                max-width: 960px;
-                margin: 0 auto;
-                padding: 32px 18px 80px;
-            }
-            header {
-                display: flex;
-                align-items: center;
-                gap: 14px;
-                flex-wrap: wrap;
-            }
-            h1 {
-                font-size: clamp(28px, 4.5vw, 44px);
-                margin: 6px 0;
-                letter-spacing: 0.6px;
-            }
-            .tag {
-                padding: 0.25rem 0.6rem;
-                border: 1px solid var(--accent);
-                color: var(--accent);
-                border-radius: 999px;
-                font-size: 0.85rem;
-            }
-            .lede {
-                color: var(--mute);
-                margin: 0.25rem 0 1rem;
-            }
-            .panel {
-                background: linear-gradient(
-                    180deg,
-                    rgba(255, 255, 255, 0.03),
-                    rgba(255, 255, 255, 0.01)
-                );
-                border: 1px solid #1f2a3a;
-                border-radius: 16px;
-                padding: 18px;
-                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
-            }
-            h2 {
-                font-size: clamp(18px, 2.5vw, 24px);
-                margin: 18px 0 8px;
-            }
-            ul {
-                padding-left: 1.1rem;
-                margin: 0;
-            }
-            li + li {
-                margin-top: 0.35rem;
-            }
-            code,
-            .kbd {
-                background: #0a121d;
-                border: 1px solid #1b2a40;
-                padding: 0.15rem 0.4rem;
-                border-radius: 6px;
-                font-size: 0.92em;
-            }
-            .grid {
-                display: grid;
-                grid-template-columns: 1fr;
-                gap: 14px;
-            }
-            @media (min-width: 840px) {
-                .grid {
-                    grid-template-columns: 1.15fr 0.85fr;
-                }
-            }
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Habitapocalypse v0.1</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: ui-monospace, monospace;
+      background: #0b0f14;
+      color: #e8f1ff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+      color: #ff80bf;
+    }
+    .stats {
+      display: flex;
+      gap: 20px;
+      margin: 20px 0;
+    }
+    .stat {
+      background: #0f1622;
+      border: 1px solid #1f2a3a;
+      padding: 10px 14px;
+      border-radius: 12px;
+      text-align: center;
+      min-width: 90px;
+    }
+    .buttons {
+      display: grid;
+      gap: 12px;
+      max-width: 400px;
+      width: 100%;
+    }
+    button {
+      background: #0f1622;
+      color: #e8f1ff;
+      border: 1px solid #2a3b54;
+      padding: 10px;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    button:hover {
+      border-color: #3b5274;
+    }
+    .log {
+      margin-top: 20px;
+      background: #091019;
+      border: 1px dashed #243247;
+      padding: 12px;
+      border-radius: 10px;
+      max-width: 500px;
+      width: 100%;
+      height: 180px;
+      overflow-y: auto;
+      font-size: 0.9rem;
+    }
+    .title {
+      margin-top: 10px;
+      color: #80ffcc;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>☠︎ Habitapocalypse</h1>
+  <p><em>Level up your burnout. Humanity is the debuff.</em></p>
 
-            .glitch {
-                position: relative;
-                display: inline-block;
-            }
-            .glitch span {
-                position: absolute;
-                inset: 0;
-                mix-blend-mode: screen;
-                opacity: 0.6;
-            }
-            .glitch .g1 {
-                transform: translate(1px, -1px);
-                color: var(--accent);
-            }
-            .glitch .g2 {
-                transform: translate(-1px, 1px);
-                color: var(--accent2);
-            }
+  <div class="stats">
+    <div class="stat">Humanity<br><span id="humanity">100</span>%</div>
+    <div class="stat">Obsolescence<br><span id="obsol">50</span>%</div>
+    <div class="stat">Sanity<br><span id="sanity">100</span></div>
+    <div class="stat">XP<br><span id="xp">0</span></div>
+  </div>
 
-            .ascii {
-                white-space: pre;
-                font-size: 12px;
-                line-height: 12px;
-                background: #091019;
-                border: 1px dashed #243247;
-                padding: 14px;
-                border-radius: 12px;
-                overflow: auto;
-            }
+  <div class="buttons">
+    <button onclick="doAction('sleep')">😴 Skip Sleep</button>
+    <button onclick="doAction('eat')">🍕 Forget to Eat</button>
+    <button onclick="doAction('friends')">🙅 Ignore Friends</button>
+    <button onclick="doAction('deploy')">💻 Commit to Prod at 3AM</button>
+  </div>
 
-            .ticker {
-                display: flex;
-                gap: 12px;
-                overflow: hidden;
-                border: 1px solid #26364d;
-                border-radius: 14px;
-                padding: 10px 12px;
-                background: #0a131f;
-                align-items: center;
-            }
-            .dot {
-                width: 8px;
-                height: 8px;
-                border-radius: 50%;
-                background: var(--danger);
-                box-shadow: 0 0 16px var(--danger);
-            }
-            .marquee {
-                display: inline-block;
-                white-space: nowrap;
-                animation: scroll 26s linear infinite;
-            }
-            @keyframes scroll {
-                from {
-                    transform: translateX(0);
-                }
-                to {
-                    transform: translateX(-100%);
-                }
-            }
+  <div class="title" id="title">Title: Junior Doomshipper</div>
 
-            .btn {
-                cursor: pointer;
-                border: 1px solid #2a3b54;
-                border-radius: 10px;
-                padding: 0.5rem 0.75rem;
-                background: #0b1422;
-                color: var(--ink);
-            }
-            .btn:hover {
-                border-color: #3b5274;
-            }
-            .inline-btn {
-                font-size: 0.85rem;
-                padding: 0.35rem 0.6rem;
-                border-radius: 999px;
-            }
+  <div class="log" id="log"></div>
 
-            .pill {
-                display: inline-flex;
-                align-items: center;
-                gap: 0.4rem;
-                padding: 0.35rem 0.6rem;
-                border-radius: 999px;
-                border: 1px solid #2a3b54;
-                background: #0b1422;
-                color: var(--mute);
-                font-size: 0.85rem;
-            }
-            .pill .led {
-                width: 6px;
-                height: 6px;
-                border-radius: 50%;
-                background: var(--warn);
-                box-shadow: 0 0 10px var(--warn);
-            }
+  <script>
+    let humanity = 100;
+    let obsol = 50;
+    let sanity = 100;
+    let xp = 0;
+    let title = "Junior Doomshipper";
 
-            .hl {
-                color: var(--accent);
-            }
-            blockquote {
-                margin: 0;
-                padding-left: 14px;
-                border-left: 3px solid #2c3e57;
-                color: #c7d6f1;
-            }
+    const log = document.getElementById("log");
 
-            footer {
-                margin-top: 32px;
-                color: var(--mute);
-                font-size: 0.9rem;
-            }
+    function updateUI() {
+      document.getElementById("humanity").textContent = humanity;
+      document.getElementById("obsol").textContent = obsol;
+      document.getElementById("sanity").textContent = sanity;
+      document.getElementById("xp").textContent = xp;
+      document.getElementById("title").textContent = `Title: ${title}`;
+    }
 
-            /* Panic mode */
-            .panic {
-                animation: tremor 0.01s infinite linear;
-                filter: hue-rotate(-20deg) contrast(1.05);
-            }
-            @keyframes tremor {
-                0% {
-                    transform: translate(0, 0);
-                }
-                25% {
-                    transform: translate(5px, -5px);
-                }
-                50% {
-                    transform: translate(0, 5px);
-                }
-                75% {
-                    transform: translate(-5px, 0);
-                }
-                100% {
-                    transform: translate(0, 0);
-                }
-            }
-            .panic .dot {
-                background: var(--warn);
-            }
-        </style>
-    </head>
-    <body>
-        <div class="wrap">
-            <header>
-                <h1 class="glitch" aria-label="Doomshipping">
-                    Doomshipping
-                    <span class="g1">Doomshipping</span>
-                    <span class="g2">Doomshipping</span>
-                </h1>
-                <span class="tag">v1 • one‑page manifesto</span>
-                <button
-                    id="panic"
-                    class="btn inline-btn"
-                    title="Toggle Panic Mode"
-                >
-                    ☠︎ Panic Mode
-                </button>
-            </header>
+    function addLog(msg) {
+      const p = document.createElement("div");
+      p.textContent = msg;
+      log.prepend(p);
+    }
 
-            <p class="lede">
-                Endlessly shipping code with anxiety cranked to 11 while gripped
-                by existential tech dread — racing against full AI takeover &
-                human obsolescence.
-            </p>
+    function checkTitle() {
+      if (xp > 300) title = "Techno-Lich";
+      else if (xp > 200) title = "Panic Coder";
+      else if (xp > 100) title = "Sleep-Deprived Dev";
+    }
 
-            <div class="ticker" aria-live="polite">
-                <span class="dot" aria-hidden="true"></span>
-                <div class="marquee" id="marquee"></div>
-            </div>
+    function doAction(type) {
+      switch(type) {
+        case 'sleep':
+          xp += 50; humanity -= 10; sanity -= 15; addLog("Skipped sleep: +50 XP, -10 Humanity, -15 Sanity");
+          break;
+        case 'eat':
+          xp += 30; humanity -= 5; sanity -= 10; addLog("Forgot to eat: +30 XP, -5 Humanity, -10 Sanity");
+          break;
+        case 'friends':
+          xp += 100; humanity -= 20; sanity -= 20; obsol -= 5; addLog("Ignored friends: +100 XP, -20 Humanity, -20 Sanity, -5% Obsolescence");
+          break;
+        case 'deploy':
+          xp += 70; sanity -= 25; obsol -= 10; addLog("Committed to prod at 3AM: +70 XP, -25 Sanity, -10% Obsolescence");
+          break;
+      }
+      if (humanity < 0) humanity = 0;
+      if (sanity < 0) sanity = 0;
+      if (obsol < 0) obsol = 0;
+      checkTitle();
+      updateUI();
+    }
 
-            <div class="grid" style="margin-top: 16px">
-                <section class="panel">
-                    <h2>Definition</h2>
-                    <p>
-                        <strong>Doomshipping</strong> =
-                        <em>doomscrolling × vibecoding</em> → compulsive output
-                        under techno‑panic. It’s productivity as survival
-                        theatre. If <code>ship fast, break things</code> was an
-                        ethos,
-                        <span class="hl">ship now, despair later</span> is the
-                        sequel.
-                    </p>
-
-                    <h2>Why It Slaps</h2>
-                    <blockquote>
-                        Doomshipping captures the absurd hilarity of vibe
-                        coding’s chill energy getting hijacked by
-                        doomscrolling’s anxiety‑fueled chaos. It’s a love letter
-                        to every dev who’s let a late‑night X binge turn their
-                        code into a dystopian fever dream, with the AI as the
-                        ultimate enabler, churning out cursed features like a
-                        digital Pandora’s box.
-                    </blockquote>
-                </section>
-                <section class="panel" style="margin-top: 14px">
-                    <h2>Commandments (v0.1)</h2>
-                    <ul>
-                        <li>Abandon hope; <em>refactor later</em>.</li>
-                        <li>Docs after prod, tests after vibes.</li>
-                        <li>
-                            Every hack is a feature if it ships before sunrise.
-                        </li>
-                        <li>
-                            AI is your chaotic pair — never says “touch grass.”
-                        </li>
-                    </ul>
-                    <h2>Approved Commit Messages</h2>
-                    <ul id="commits">
-                        <li>“Doomshipped this in one night. Send help.”</li>
-                        <li>“Here be bugs (and existential dread).”</li>
-                    </ul>
-                </section>
-            </div>
-
-            <section class="panel" style="margin-top: 14px">
-                <h2>Rituals</h2>
-                <ul>
-                    <li>
-                        <strong>Nightly Panic Deploy</strong>: prod at 03:03;
-                        watch logs like tea leaves.
-                    </li>
-                    <li>
-                        <strong>Chaos Pairing</strong>: you + AI + a TODO hydra
-                        that grows two heads per fix.
-                    </li>
-                </ul>
-            </section>
-            <footer>
-                Remix, fork, and doomship freely.
-                <span aria-hidden="true">🫠</span>
-            </footer>
-        </div>
-
-        <script>
-            const panicBtn = document.getElementById("panic");
-            panicBtn.addEventListener("click", () =>
-                document.body.classList.toggle("panic"),
-            );
-
-            const lines = [
-                "Abandon Hope, Refactor Later • ",
-                "Doomshipped this in one night. Send help. • ",
-                "git push origin abyss • ",
-                "500 Internal Nihilism • ",
-                "Docs after prod, tests after vibes • ",
-            ];
-            document.getElementById("marquee").textContent = lines.join(" ");
-        </script>
-    </body>
+    updateUI();
+  </script>
+</body>
 </html>
