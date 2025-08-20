@@ -1,362 +1,184 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Habitapocalypse v0.5</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: ui-monospace, monospace;
-      background: #0b0f14;
-      color: #e8f1ff;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 20px;
-      animation: bgCorruption 10s infinite alternate;
-      transition: background 1s;
-    }
-    @keyframes bgCorruption {
-      0% { filter: brightness(1); }
-      75% { filter: brightness(0.9) hue-rotate(20deg); }
-      100% { filter: brightness(0.7) hue-rotate(180deg); background: #1a0f0f; }
-    }
-    @keyframes shake {
-      0% { transform: translate(0, 0); }
-      25% { transform: translate(2px, 2px); }
-      50% { transform: translate(-2px, -2px); }
-      75% { transform: translate(2px, -2px); }
-      100% { transform: translate(0, 0); }
-    }
-    h1 {
-      font-size: 2rem;
-      margin-bottom: 0.5rem;
-      color: #ff80bf;
-      text-shadow: 0 0 8px #ff80bf;
-    }
-    .stats {
-      display: flex;
-      gap: 20px;
-      margin: 20px 0;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-    .stat {
-      background: #0f1622;
-      border: 1px solid #1f2a3a;
-      padding: 10px 14px;
-      border-radius: 12px;
-      text-align: center;
-      min-width: 90px;
-    }
-    .avatar {
-      margin: 10px 0;
-      font-size: 1.5rem;
-      transition: color 0.5s;
-    }
-    .buttons {
-      display: grid;
-      gap: 12px;
-      max-width: 400px;
-      width: 100%;
-    }
-    button {
-      background: #0f1622;
-      color: #e8f1ff;
-      border: 1px solid #2a3b54;
-      padding: 10px;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
-    button:hover {
-      border-color: #ff80bf;
-      box-shadow: 0 0 12px #ff80bf;
-    }
-    .log {
-      margin-top: 20px;
-      background: #091019;
-      border: 1px dashed #243247;
-      padding: 12px;
-      border-radius: 10px;
-      max-width: 500px;
-      width: 100%;
-      height: 180px;
-      overflow-y: auto;
-      font-size: 0.9rem;
-    }
-    .title {
-      margin-top: 10px;
-      color: #80ffcc;
-      font-weight: bold;
-    }
-    .toast {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: #0f1622;
-      border: 1px solid #ff6b6b;
-      color: #ff80bf;
-      padding: 12px 16px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px #ff4040;
-      opacity: 0;
-      transition: opacity 0.4s;
-      max-width: 240px;
-      font-size: 0.85rem;
-      z-index: 1000;
-    }
-    .toast.show {
-      opacity: 1;
-    }
-    #crisisPopup {
-      display: none;
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: #0b0f14;
-      border: 2px solid #ff4040;
-      padding: 20px;
-      text-align: center;
-      box-shadow: 0 0 20px #ff4040;
-      z-index: 999;
-    }
-    #crisisPopup pre {
-      margin: 0;
-      font-size: 0.8rem;
-      color: #ff80bf;
-      animation: flicker 0.1s infinite alternate;
-    }
-    @keyframes flicker {
-      0% { opacity: 1; }
-      100% { opacity: 0.9; }
-    }
-    .achievements {
-      position: fixed;
-      top: 20px;
-      left: 20px;
-      background: rgba(15, 22, 34, 0.8);
-      border: 1px solid #243247;
-      padding: 10px;
-      border-radius: 8px;
-      max-width: 150px;
-      font-size: 0.7rem;
-    }
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Habitapocalypse v0.5</title>
+<style>
+body {
+  margin: 0;
+  font-family: ui-monospace, monospace;
+  background: #0b0f14;
+  color: #e8f1ff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  transition: background 1s;
+}
+@keyframes bgCorruption {
+  0% { filter: brightness(1); }
+  75% { filter: brightness(0.9) hue-rotate(20deg); }
+  100% { filter: brightness(0.7) hue-rotate(180deg); }
+}
+@keyframes shake {
+  0% { transform: translate(0, 0); }
+  25% { transform: translate(2px, 2px); }
+  50% { transform: translate(-2px, -2px); }
+  75% { transform: translate(2px, -2px); }
+  100% { transform: translate(0, 0); }
+}
+h1 { font-size: 2rem; margin-bottom: 0.5rem; color: #ff80bf; text-shadow: 0 0 8px #ff80bf; }
+.stats { display: flex; gap: 20px; margin: 20px 0; flex-wrap: wrap; justify-content: center; }
+.stat { background: #0f1622; border: 1px solid #1f2a3a; padding: 10px 14px; border-radius: 12px; text-align: center; min-width: 90px; }
+.avatar { margin: 10px 0; font-size: 1.5rem; transition: color 0.5s; }
+.buttons { display: grid; gap: 12px; max-width: 400px; width: 100%; }
+button { background: #0f1622; color: #e8f1ff; border: 1px solid #2a3b54; padding: 10px; border-radius: 10px; cursor: pointer; transition: border-color 0.2s, box-shadow 0.2s; }
+button:hover { border-color: #ff80bf; box-shadow: 0 0 12px #ff80bf; }
+.log { margin-top: 20px; background: #091019; border: 1px dashed #243247; padding: 12px; border-radius: 10px; max-width: 500px; width: 100%; height: 180px; overflow-y: auto; font-size: 0.9rem; }
+.title { margin-top: 10px; color: #80ffcc; font-weight: bold; }
+.toast { position: fixed; bottom: 20px; right: 20px; background: #0f1622; border: 1px solid #ff6b6b; color: #ff80bf; padding: 12px 16px; border-radius: 8px; box-shadow: 0 0 10px #ff4040; opacity: 0; transition: opacity 0.4s; max-width: 240px; font-size: 0.85rem; z-index: 1000; }
+.toast.show { opacity: 1; }
+#crisisPopup { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #0b0f14; border: 2px solid #ff4040; padding: 20px; text-align: center; box-shadow: 0 0 20px #ff4040; z-index: 999; }
+#crisisPopup pre { margin: 0; font-size: 0.8rem; color: #ff80bf; animation: flicker 0.1s infinite alternate; }
+@keyframes flicker { 0% { opacity: 1; } 100% { opacity: 0.9; } }
+.achievements { position: fixed; top: 20px; left: 20px; background: rgba(15, 22, 34, 0.8); border: 1px solid #243247; padding: 10px; border-radius: 8px; max-width: 180px; font-size: 0.7rem; }
+</style>
 </head>
 <body>
-  <h1>☠︎ Habitapocalypse</h1>
-  <p><em>Level up your burnout. Humanity is the debuff.</em></p>
+<h1>☠︎ Habitapocalypse</h1>
+<p><em>Level up your burnout. Humanity is the debuff.</em></p>
 
-  <div class="avatar" id="avatar">Avatar: 🙂</div>
+<div class="avatar" id="avatar">Avatar: 🙂</div>
 
-  <div class="stats">
-    <div class="stat">Humanity<br><span id="humanity">100</span>%</div>
-    <div class="stat">Obsolescence<br><span id="obsol">50</span>%</div>
-    <div class="stat">Sanity<br><span id="sanity">100</span></div>
-    <div class="stat">Burnout<br><span id="burnout">0</span></div>
-    <div class="stat">XP<br><span id="xp">0</span></div>
-  </div>
+<div class="stats">
+  <div class="stat">Humanity<br><span id="humanity">100</span>%</div>
+  <div class="stat">Obsolescence<br><span id="obsol">50</span>%</div>
+  <div class="stat">Sanity<br><span id="sanity">100</span></div>
+  <div class="stat">Burnout<br><span id="burnout">0</span></div>
+  <div class="stat">XP<br><span id="xp">0</span></div>
+</div>
 
-  <div class="buttons">
-    <button onclick="doAction('sleep')">😴 Skip Sleep</button>
-    <button onclick="doAction('eat')">🍕 Forget to Eat</button>
-    <button onclick="doAction('friends')">🙅 Ignore Friends</button>
-    <button onclick="doAction('deploy')">💻 Commit to Prod at 3AM</button>
-    <button onclick="doAction('doomscroll')">📱 Doomscroll X</button>
-    <button onclick="doAction('refactor')">🔧 Rage-Refactor</button>
-    <button onclick="doAction('legacy')">💾 Legacy Code Hell</button>
-  </div>
+<div class="buttons">
+  <button onclick="doAction('sleep')">😴 Skip Sleep</button>
+  <button onclick="doAction('eat')">🍕 Forget to Eat</button>
+  <button onclick="doAction('friends')">🙅 Ignore Friends</button>
+  <button onclick="doAction('deploy')">💻 Commit to Prod at 3AM</button>
+  <button onclick="doAction('doomscroll')">📱 Doomscroll X</button>
+  <button onclick="doAction('refactor')">🔧 Rage-Refactor</button>
+  <button onclick="doAction('legacy')">💾 Legacy Code Hell</button>
+</div>
 
-  <div class="title" id="title">Title: Junior Doomshipper</div>
+<div class="title" id="title">Title: Junior Doomshipper</div>
+<div class="log" id="log"></div>
+<div id="crisisPopup">
+<pre>
+😢  404: Existential Crisis
+╔════════════════════╗
+║ 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥 ║
+║ 🔥  SERVER MELTDOWN 🔥 ║
+║ 🔥  DOOMGUY: 💥🔫 🔥 ║
+║ 🔥  BUGS: 🐞💀💀 🔥 ║
+║ 🔥  DATA VOID: ∅  🔥 ║
+║ 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥 ║
+╚════════════════════╝
+Error: Purpose Not Found. Refactor soul?
+</pre>
+<button onclick="closeCrisis()">Panic Less</button>
+</div>
+<div id="toast" class="toast"></div>
+<div class="achievements" id="achievements"></div>
 
-  <div class="log" id="log"></div>
+<script>
+let humanity=100, obsol=50, sanity=100, burnout=0, xp=0, title="Junior Doomshipper";
+let sleepStreak=0, doomscrollStreak=0, achievements=[];
 
-  <div id="crisisPopup">
-    <pre>
-  😢  404: Existential Crisis
-  ╔════════════════════╗
-  ║ 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥 ║
-  ║ 🔥  SERVER MELTDOWN 🔥 ║
-  ║ 🔥  DOOMGUY: 💥🔫 🔥 ║
-  ║ 🔥  BUGS: 🐞💀💀 🔥 ║
-  ║ 🔥  DATA VOID: ∅  🔥 ║
-  ║ 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥 ║
-  ╚════════════════════╝
-  Error: Purpose Not Found. Refactor soul?
-    </pre>
-    <button onclick="closeCrisis()">Panic Less</button>
-  </div>
+const log=document.getElementById("log"), toast=document.getElementById("toast"),
+crisisPopup=document.getElementById("crisisPopup"), avatar=document.getElementById("avatar"),
+achievementsDiv=document.getElementById("achievements");
 
-  <div id="toast" class="toast"></div>
+function updateUI(){
+  document.getElementById("humanity").textContent=humanity;
+  document.getElementById("obsol").textContent=obsol;
+  document.getElementById("sanity").textContent=sanity;
+  document.getElementById("burnout").textContent=burnout;
+  document.getElementById("xp").textContent=xp;
+  document.getElementById("title").textContent=`Title: ${title}`;
 
-  <div class="achievements" id="achievements"></div>
+  // Avatar mutation
+  if(humanity<=0||sanity<=0) avatar.textContent="Avatar: 💀";
+  else if(humanity<=50||sanity<=50) avatar.textContent="Avatar: 😵";
+  else avatar.textContent="Avatar: 🙂";
+  avatar.style.color=humanity<=0?"#ff4040":sanity<=0?"#ff80bf":"#e8f1ff";
 
-  <script>
-    let humanity = 100;
-    let obsol = 50;
-    let sanity = 100;
-    let burnout = 0;
-    let xp = 0;
-    let title = "Junior Doomshipper";
-    let sleepStreak = 0;
-    let doomscrollStreak = 0;
-    let achievements = [];
+  // Background corruption
+  document.body.style.animation=obsol>=75?"shake 0.5s infinite, bgCorruption 10s infinite alternate":"bgCorruption 10s infinite alternate";
+  if(obsol>=100) document.body.style.background="#1a0f0f";
 
-    const log = document.getElementById("log");
-    const toast = document.getElementById("toast");
-    const crisisPopup = document.getElementById("crisisPopup");
-    const avatar = document.getElementById("avatar");
-    const achievementsDiv = document.getElementById("achievements");
+  // Achievements
+  achievementsDiv.innerHTML=achievements.map(a=>`<div>${a}</div>`).join("");
+}
 
-    function updateUI() {
-      document.getElementById("humanity").textContent = humanity;
-      document.getElementById("obsol").textContent = obsol;
-      document.getElementById("sanity").textContent = sanity;
-      document.getElementById("burnout").textContent = burnout;
-      document.getElementById("xp").textContent = xp;
-      document.getElementById("title").textContent = `Title: ${title}`;
-      // Avatar mutation
-      if (humanity <= 0 || sanity <= 0) avatar.textContent = "Avatar: 💀";
-      else if (humanity <= 50 || sanity <= 50) avatar.textContent = "Avatar: 😵";
-      else avatar.textContent = "Avatar: 🙂";
-      avatar.style.color = humanity <= 0 ? "#ff4040" : sanity <= 0 ? "#ff80bf" : "#e8f1ff";
-      // Background corruption
-      if (obsol >= 75) body.style.animation = "shake 0.5s infinite, bgCorruption 10s infinite alternate";
-      if (obsol >= 100) body.style.background = "#1a0f0f";
-      // Achievements
-      achievementsDiv.innerHTML = achievements.map(ach => `<div>${ach}</div>`).join("");
-    }
+function addLog(msg){ const p=document.createElement("div"); p.textContent=msg; log.prepend(p); }
+function showToastAndLog(msg){ toast.textContent=msg; toast.classList.add("show"); addLog(msg); setTimeout(()=>toast.classList.remove("show"),3000); }
+function showAsciiBanner(msg){ addLog(msg); if(!achievements.includes(msg)) achievements.push(msg); updateUI(); }
 
-    function addLog(msg) {
-      const p = document.createElement("div");
-      p.textContent = msg;
-      log.prepend(p);
-    }
+function closeCrisis(){ crisisPopup.style.display="none"; showToastAndLog("AI Rickroll Protocol: You're not obsolete... yet."); new Audio("https://freesound.org/data/previews/171/171671_2437721-lq.mp3").play(); }
 
-    function showToastAndLog(msg) {
-      toast.textContent = msg;
-      toast.classList.add("show");
-      addLog(msg);
-      setTimeout(() => toast.classList.remove("show"), 3000);
-    }
+function checkTitle(){
+  if(xp>500) title="Singularity Sovereign";
+  else if(xp>400) title="Eternal Refactorer";
+  else if(xp>300) title="Techno-Lich";
+  else if(xp>200) title="Panic Coder";
+  else if(xp>100) title="Sleep-Deprived Dev";
+}
 
-    function showAsciiBanner(msg) {
-      addLog(msg);
-      achievements.push(msg); // Persist as achievement
-      updateUI();
-    }
+function doAction(type){
+  switch(type){
+    case'sleep':
+      sleepStreak++;
+      let sb=sleepStreak>=3?10*sleepStreak:0;
+      xp+=50+sb; humanity-=10; sanity-=15; obsol+=5; burnout+=5;
+      showToastAndLog(`Skipped sleep: +${50+sb} XP, -10 Humanity, -15 Sanity, +5% Obsolescence${sleepStreak>=3?" (Insomnia Multiplier!)":""}`);
+      if(sleepStreak===7) showToastAndLog("😴💉 Unlocked 'Red Bull Veins' skin! Sleep is for humans. You're not."); break;
+    case'eat':
+      xp+=30; humanity-=5; sanity-=10; burnout+=5;
+      showToastAndLog("Forgot to eat: +30 XP, -5 Humanity, -10 Sanity, +5 Burnout");
+      if(xp>=150&&!achievements.includes("🍵 Soylent Skin")){achievements.push("🍵 Soylent Skin"); showToastAndLog("Unlocked 'Soylent Skin'! Hunger is obsolete.");} break;
+    case'friends':
+      xp+=100; humanity-=20; sanity-=20; obsol-=5;
+      showToastAndLog("Ignored friends: +100 XP, -20 Humanity, -20 Sanity, -5% Obsolescence");
+      if(xp>=300&&!achievements.includes("🚫 Social 503: Service Unavailable")){achievements.push("🚫 Social 503: Service Unavailable"); showToastAndLog("Earned 'Social 503: Service Unavailable' badge!");} break;
+    case'deploy':
+      xp+=70; sanity-=25; obsol-=10; burnout+=10;
+      showToastAndLog("Committed to prod at 3AM: +70 XP, -25 Sanity, -10% Obsolescence, +10 Burnout");
+      if(Math.random()<0.02){ crisisPopup.style.display="block"; showToastAndLog("🔥 PROD APOCALYPSE! App crashed. Good luck."); } break;
+    case'doomscroll':
+      doomscrollStreak++;
+      let scrollBonus=doomscrollStreak>=2?20*doomscrollStreak:0;
+      xp+=60+scrollBonus; sanity-=15; obsol+=10;
+      showToastAndLog(`Doomscrolled X: +${60+scrollBonus} XP, -15 Sanity, +10% Obsolescence${doomscrollStreak>=2?" (Doomscroll Frenzy!)":""}`);
+      if(Math.random()<0.2){ showToastAndLog("👾 Cacodemon Bug spawned! Debug or lose 10 Humanity."); humanity-=10; } break;
+    case'refactor':
+      xp+=80; sanity-=30; burnout+=15;
+      showToastAndLog("Rage-Refactored: +80 XP, -30 Sanity, +15 Burnout");
+      if(Math.random()<0.1&&!achievements.includes("💇 Null Pointer Hair")){achievements.push("💇 Null Pointer Hair"); showToastAndLog("Unlocked 'Null Pointer Hair'! Refactored into the void."); } break;
+    case'legacy':
+      xp+=90; sanity-=35; burnout+=20;
+      showToastAndLog("Legacy Code Hell: +90 XP, -35 Sanity, +20 Burnout");
+      if(Math.random()<0.3){ crisisPopup.style.display="block"; showToastAndLog("💾 Failed Legacy Code Hell! 404: Existential Crisis triggered."); } break;
+  }
+  if(xp>=300&&!achievements.includes("🖥️ Techno-Lich Ascended")) showAsciiBanner("🖥️ Techno-Lich Ascended\n╔════════════╗\n║ 💀🔥ASCEND🔥💀 ║\n╚════════════╝");
+  if(humanity<0) humanity=0;
+  if(sanity<0) sanity=0;
+  if(obsol<0) obsol=0;
+  if(obsol>100) obsol=100;
+  burnout=Math.min(burnout,100);
+  checkTitle(); updateUI();
+}
 
-    function closeCrisis() {
-      crisisPopup.style.display = "none";
-      showToastAndLog("AI Rickroll Protocol: You're not obsolete... yet.");
-      new Audio("https://freesound.org/data/previews/171/171671_2437721-lq.mp3").play(); // Never Gonna Give You Up MIDI
-    }
-
-    function checkTitle() {
-      if (xp > 500) title = "Singularity Sovereign";
-      else if (xp > 400) title = "Eternal Refactorer";
-      else if (xp > 300) title = "Techno-Lich";
-      else if (xp > 200) title = "Panic Coder";
-      else if (xp > 100) title = "Sleep-Deprived Dev";
-    }
-
-    function doAction(type) {
-      switch(type) {
-        case 'sleep':
-          sleepStreak++;
-          let sleepBonus = sleepStreak >= 3 ? 10 * sleepStreak : 0;
-          xp += 50 + sleepBonus;
-          humanity -= 10;
-          sanity -= 15;
-          obsol += 5;
-          burnout += 5;
-          showToastAndLog(`Skipped sleep: +${50 + sleepBonus} XP, -10 Humanity, -15 Sanity, +5% Obsolescence${sleepStreak >= 3 ? " (Insomnia Multiplier!)" : ""}`);
-          if (sleepStreak === 7) showToastAndLog("😴💉 Unlocked 'Red Bull Veins' skin! Sleep is for humans. You're not.");
-          break;
-        case 'eat':
-          xp += 30;
-          humanity -= 5;
-          sanity -= 10;
-          burnout += 5;
-          showToastAndLog("Forgot to eat: +30 XP, -5 Humanity, -10 Sanity, +5 Burnout");
-          if (xp >= 150 && !achievements.includes("🍵 Soylent Skin")) {
-            achievements.push("🍵 Soylent Skin");
-            showToastAndLog("Unlocked 'Soylent Skin'! Hunger is obsolete.");
-          }
-          break;
-        case 'friends':
-          xp += 100;
-          humanity -= 20;
-          sanity -= 20;
-          obsol -= 5;
-          showToastAndLog("Ignored friends: +100 XP, -20 Humanity, -20 Sanity, -5% Obsolescence");
-          if (xp >= 300 && !achievements.includes("🚫 Social 503: Service Unavailable")) {
-            achievements.push("🚫 Social 503: Service Unavailable");
-            showToastAndLog("Earned 'Social 503: Service Unavailable' badge!");
-          }
-          break;
-        case 'deploy':
-          xp += 70;
-          sanity -= 25;
-          obsol -= 10;
-          burnout += 10;
-          showToastAndLog("Committed to prod at 3AM: +70 XP, -25 Sanity, -10% Obsolescence, +10 Burnout");
-          if (Math.random() < 0.02) {
-            crisisPopup.style.display = "block";
-            showToastAndLog("🔥 PROD APOCALYPSE! App crashed. Good luck.");
-          }
-          break;
-        case 'doomscroll':
-          doomscrollStreak++;
-          let scrollBonus = doomscrollStreak >= 2 ? 20 * doomscrollStreak : 0;
-          xp += 60 + scrollBonus;
-          sanity -= 15;
-          obsol += 10;
-          showToastAndLog(`Doomscrolled X: +${60 + scrollBonus} XP, -15 Sanity, +10% Obsolescence${doomscrollStreak >= 2 ? " (Doomscroll Frenzy!)" : ""}`);
-          if (Math.random() < 0.2) {
-            showToastAndLog("👾 Cacodemon Bug spawned! Debug or lose 10 Humanity.");
-            humanity -= 10;
-          }
-          break;
-        case 'refactor':
-          xp += 80;
-          sanity -= 30;
-          burnout += 15;
-          showToastAndLog("Rage-Refactored: +80 XP, -30 Sanity, +15 Burnout");
-          if (Math.random() < 0.1 && !achievements.includes("💇 Null Pointer Hair")) {
-            achievements.push("💇 Null Pointer Hair");
-            showToastAndLog("Unlocked 'Null Pointer Hair'! Refactored into the void.");
-          }
-          break;
-        case 'legacy':
-          xp += 90;
-          sanity -= 35;
-          burnout += 20;
-          showToastAndLog("Legacy Code Hell: +90 XP, -35 Sanity, +20 Burnout");
-          if (Math.random() < 0.3) {
-            crisisPopup.style.display = "block";
-            showToastAndLog("💾 Failed Legacy Code Hell! 404: Existential Crisis triggered.");
-          }
-          break;
-      }
-      if (xp >= 300 && !achievements.includes("🖥️ Techno-Lich Ascended")) {
-        showAsciiBanner("🖥️ Techno-Lich Ascended\n╔════════════╗\n║ 💀🔥ASCEND🔥💀 ║\n╚════════════╝");
-      }
-      if (humanity < 0) humanity = 0;
-      if (sanity < 0) sanity = 0;
-      if (obsol < 0) obsol = 0;
-      if (obsol > 100) obsol = 100;
-      burnout = Math.min(burnout, 100);
-      checkTitle();
-      updateUI();
-    }
-
-    updateUI();
-    // Cursed comment: Riley coded this while doomscrolling X at 4:30 AM
-    console.log("Habitapocalypse v0.5: Visual decay is the new XP");
-  </script>
+updateUI();
+console.log("Habitapocalypse v0.5: Visual decay is the new XP");
+</script>
 </body>
 </html>
