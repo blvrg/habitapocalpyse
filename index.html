@@ -1,212 +1,347 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Habitapocalypse v0.6</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: ui-monospace, monospace;
-      background: #0b0f14;
-      color: #e8f1ff;
-      display: flex;
-      justify-content: center;
-      padding: 20px;
-      transition: background 1s;
-    }
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Habitapocalypse v0.7</title>
+        <style>
+            body {
+                margin: 0;
+                font-family: ui-monospace, monospace;
+                background: #0b0f14;
+                color: #e8f1ff;
+                display: flex;
+                justify-content: center;
+                padding: 20px;
+                transition: background 1s;
+            }
 
-    #gameContainer {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      width: 100%;
-      transition: transform 0.1s;
-      animation: bgCorruption 10s infinite alternate;
-    }
+            #gameContainer {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                width: 100%;
+                transition: transform 0.1s;
+                animation: bgCorruption 10s infinite alternate;
+            }
 
-    @keyframes bgCorruption {
-      0% { filter: brightness(1); }
-      75% { filter: brightness(0.9) hue-rotate(20deg); }
-      100% { filter: brightness(0.7) hue-rotate(180deg); }
-    }
+            @keyframes bgCorruption {
+                0% {
+                    filter: brightness(1);
+                }
+                75% {
+                    filter: brightness(0.9) hue-rotate(20deg);
+                }
+                100% {
+                    filter: brightness(0.7) hue-rotate(180deg);
+                }
+            }
 
-    @keyframes shake {
-      0% { transform: translate(0,0); }
-      20% { transform: translate(var(--jitter-x), var(--jitter-y)); }
-      40% { transform: translate(var(--jitter-x-neg), var(--jitter-y-neg)); }
-      60% { transform: translate(var(--jitter-x), var(--jitter-y-neg)); }
-      80% { transform: translate(var(--jitter-x-neg), var(--jitter-y)); }
-      100% { transform: translate(0,0); }
-    }
+            @keyframes shake {
+                0% {
+                    transform: translate(0, 0);
+                }
+                20% {
+                    transform: translate(var(--jitter-x), var(--jitter-y));
+                }
+                40% {
+                    transform: translate(
+                        var(--jitter-x-neg),
+                        var(--jitter-y-neg)
+                    );
+                }
+                60% {
+                    transform: translate(var(--jitter-x), var(--jitter-y-neg));
+                }
+                80% {
+                    transform: translate(var(--jitter-x-neg), var(--jitter-y));
+                }
+                100% {
+                    transform: translate(0, 0);
+                }
+            }
 
-    .shake {
-      animation: shake 0.1s infinite;
-    }
+            .shake {
+                animation: shake 0.1s infinite;
+            }
 
-    h1 {
-      font-size: 2rem;
-      margin-bottom: 0.5rem;
-      color: #ff80bf;
-      text-shadow: 0 0 8px #ff80bf;
-    }
+            h1 {
+                font-size: 2rem;
+                margin-bottom: 0.5rem;
+                color: #ff80bf;
+                text-shadow: 0 0 8px #ff80bf;
+            }
 
-    .stats {
-      display: flex;
-      gap: 20px;
-      margin: 20px 0;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
+            .stats {
+                display: flex;
+                gap: 20px;
+                margin: 20px 0;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
 
-    .stat {
-      background: #0f1622;
-      border: 1px solid #1f2a3a;
-      padding: 10px 14px;
-      border-radius: 12px;
-      text-align: center;
-      min-width: 90px;
-    }
+            .stat {
+                background: #0f1622;
+                border: 1px solid #1f2a3a;
+                padding: 10px 14px;
+                border-radius: 12px;
+                text-align: center;
+                min-width: 90px;
+            }
 
-    .avatar {
-      margin: 10px 0;
-      font-size: 1.5rem;
-      transition: color 0.5s;
-    }
+            .avatar {
+                margin: 10px 0;
+                font-size: 1.5rem;
+                transition: color 0.5s;
+            }
 
-    .buttons {
-      display: grid;
-      gap: 12px;
-      max-width: 400px;
-      width: 100%;
-    }
+            .buttons {
+                display: grid;
+                gap: 12px;
+                max-width: 400px;
+                width: 100%;
+            }
 
-    button {
-      background: #0f1622;
-      color: #e8f1ff;
-      border: 1px solid #2a3b54;
-      padding: 10px;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
+            button {
+                background: #0f1622;
+                color: #e8f1ff;
+                border: 1px solid #2a3b54;
+                padding: 10px;
+                border-radius: 10px;
+                cursor: pointer;
+                transition:
+                    border-color 0.2s,
+                    box-shadow 0.2s;
+            }
 
-    button:hover {
-      border-color: #ff80bf;
-      box-shadow: 0 0 12px #ff80bf;
-    }
+            button:hover {
+                border-color: #ff80bf;
+                box-shadow: 0 0 12px #ff80bf;
+            }
 
-    .log {
-      margin-top: 20px;
-      background: #091019;
-      border: 1px dashed #243247;
-      padding: 12px;
-      border-radius: 10px;
-      max-width: 500px;
-      width: 100%;
-      height: 180px;
-      overflow-y: auto;
-      font-size: 0.9rem;
-    }
+            button.hidden {
+                display: none;
+            }
 
-    .title {
-      margin-top: 10px;
-      color: #80ffcc;
-      font-weight: bold;
-    }
+            .log {
+                margin-top: 20px;
+                background: #091019;
+                border: 1px dashed #243247;
+                padding: 12px;
+                border-radius: 10px;
+                max-width: 500px;
+                width: 100%;
+                height: 180px;
+                overflow-y: auto;
+                font-size: 0.9rem;
+            }
 
-    .toast {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: #0f1622;
-      border: 1px solid #ff6b6b;
-      color: #ff80bf;
-      padding: 12px 16px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px #ff4040;
-      opacity: 0;
-      transition: opacity 0.4s;
-      max-width: 240px;
-      font-size: 0.85rem;
-      z-index: 1000;
-    }
+            .title {
+                margin-top: 10px;
+                color: #80ffcc;
+                font-weight: bold;
+            }
 
-    .toast.show {
-      opacity: 1;
-    }
+            .toast {
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                background: #0f1622;
+                border: 1px solid #ff6b6b;
+                color: #ff80bf;
+                padding: 12px 16px;
+                border-radius: 8px;
+                box-shadow: 0 0 10px #ff4040;
+                opacity: 0;
+                transition: opacity 0.4s;
+                max-width: 240px;
+                font-size: 0.85rem;
+                z-index: 1000;
+            }
 
-    #crisisPopup {
-      display: none;
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: #0b0f14;
-      border: 2px solid #ff4040;
-      padding: 20px;
-      text-align: center;
-      box-shadow: 0 0 20px #ff4040;
-      z-index: 999;
-    }
+            .toast.show {
+                opacity: 1;
+            }
 
-    #crisisPopup pre {
-      margin: 0;
-      font-size: 0.8rem;
-      color: #ff80bf;
-      animation: flicker 0.1s infinite alternate;
-    }
+            #crisisPopup,
+            #endingPopup,
+            #warningModal,
+            #reviewsPage {
+                display: none;
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: #0b0f14;
+                border: 2px solid #ff4040;
+                padding: 20px;
+                text-align: center;
+                box-shadow: 0 0 20px #ff4040;
+                z-index: 999;
+                max-width: 90vw;
+                max-height: 90vh;
+                overflow-y: auto;
+            }
 
-    @keyframes flicker {
-      0% { opacity: 1; }
-      100% { opacity: 0.9; }
-    }
+            #crisisPopup pre,
+            #endingPopup pre {
+                margin: 10px 0;
+                font-size: 0.8rem;
+                color: #ff80bf;
+                animation: flicker 0.1s infinite alternate;
+                white-space: pre-wrap;
+            }
 
-    .achievements {
-      position: fixed;
-      top: 20px;
-      left: 20px;
-      background: rgba(15, 22, 34, 0.8);
-      border: 1px solid #243247;
-      padding: 10px;
-      border-radius: 8px;
-      max-width: 180px;
-      font-size: 0.7rem;
-    }
-  </style>
-</head>
-<body>
-  <div id="gameContainer">
-    <h1>☠︎ Habitapocalypse</h1>
-    <p><em>Level up your burnout. Humanity is the debuff.</em></p>
+            @keyframes flicker {
+                0% {
+                    opacity: 1;
+                }
+                100% {
+                    opacity: 0.9;
+                }
+            }
 
-    <div class="avatar" id="avatar">Avatar: 🙂</div>
+            .achievements {
+                position: fixed;
+                top: 20px;
+                left: 20px;
+                background: rgba(15, 22, 34, 0.8);
+                border: 1px solid #243247;
+                padding: 10px;
+                border-radius: 8px;
+                max-width: 180px;
+                font-size: 0.7rem;
+            }
 
-    <div class="stats">
-      <div class="stat">Humanity<br><span id="humanity">100</span>%</div>
-      <div class="stat">Obsolescence<br><span id="obsol">50</span>%</div>
-      <div class="stat">Sanity<br><span id="sanity">100</span></div>
-      <div class="stat">Burnout<br><span id="burnout">0</span></div>
-      <div class="stat">XP<br><span id="xp">0</span></div>
-      <div class="stat">Coffee<br><span id="coffee">0</span></div>
-    </div>
+            .nav {
+                margin: 10px;
+                font-size: 0.8rem;
+                color: #8080a0;
+                cursor: pointer;
+                text-decoration: underline;
+            }
+        </style>
+    </head>
+    <body>
+        <!-- Landing Page / Reviews -->
+        <div id="reviewsPage">
+            <h2>Habitapocalypse v0.7</h2>
+            <p><em>Level up your burnout. Humanity is the debuff.</em></p>
+            <p>
+                ⭐⭐⭐⭐⭐ "A masterclass in satirical game design." — AI
+                Reviewer
+            </p>
+            <p>
+                ⭐⭐⭐⭐⭐ "I haven't slept in 4 days. My dog left me. But I'm
+                level 12!" — @BurnoutGuru69
+            </p>
+            <p>
+                ⭐⭐⭐⭐⭐ "This app cured my need for validation. Now I only
+                seek error logs." — Former Human
+            </p>
+            <p>
+                ⭐⭐⭐⭐⭐ "I played during therapy. My therapist cried. I felt
+                nothing." — Emotionally Optimized™
+            </p>
+            <button onclick="startGame()">Play Habitapocalypse</button>
+        </div>
 
-    <div class="buttons">
-      <button onclick="doAction('sleep')">😴 Skip Sleep</button>
-      <button onclick="doAction('eat')">🍕 Forget to Eat</button>
-      <button onclick="doAction('friends')">🙅 Ignore Friends</button>
-      <button onclick="doAction('deploy')">💻 Commit to Prod at 3AM</button>
-      <button onclick="doAction('doomscroll')">📱 Doomscroll X</button>
-      <button onclick="doAction('refactor')">🔧 Rage-Refactor</button>
-      <button onclick="doAction('legacy')">💾 Legacy Code Hell</button>
-      <button onclick="doAction('coffee')">☕ Drink Coffee</button>
-    </div>
+        <!-- Content Warning Modal -->
+        <div id="warningModal">
+            <h3>⚠️ Content Warning</h3>
+            <p>
+                <strong>Habitapocalypse is a dark satire</strong> of
+                productivity culture, tech bro mentality, and the gamification
+                of suffering.
+            </p>
+            <p>
+                It mocks harmful habits like sleep deprivation, social
+                isolation, and burnout.
+            </p>
+            <p>
+                <strong
+                    >No actual humans should skip sleep, ignore friends, or
+                    rage-refactor their souls.</strong
+                >
+            </p>
+            <p>If you're struggling, please reach out:</p>
+            <p>
+                <a
+                    href="https://988lifeline.org"
+                    target="_blank"
+                    style="color: #ff80bf"
+                    >988 Lifeline</a
+                >
+                |
+                <a
+                    href="https://www.crisistextline.org"
+                    target="_blank"
+                    style="color: #ff80bf"
+                    >Crisis Text Line</a
+                >
+            </p>
+            <button onclick="closeWarning()">I Understand (Continue)</button>
+        </div>
 
-    <div class="title" id="title">Title: Junior Doomshipper</div>
-    <div class="log" id="log"></div>
+        <!-- Game UI -->
+        <div id="gameContainer" style="display: none">
+            <h1>☠︎ Habitapocalypse</h1>
+            <p><em>Level up your burnout. Doomshipper edition.</em></p>
 
-    <div id="crisisPopup">
-      <pre>
+            <div class="avatar" id="avatar">Avatar: 🙂</div>
+
+            <div class="stats">
+                <div class="stat">
+                    Humanity<br /><span id="humanity">100</span>%
+                </div>
+                <div class="stat">
+                    Obsolescence<br /><span id="obsol">50</span>%
+                </div>
+                <div class="stat">Sanity<br /><span id="sanity">100</span></div>
+                <div class="stat">Burnout<br /><span id="burnout">0</span></div>
+                <div class="stat">XP<br /><span id="xp">0</span></div>
+                <div class="stat">Coffee<br /><span id="coffee">0</span></div>
+            </div>
+
+            <div class="buttons">
+                <button onclick="doAction('sleep')">😴 Skip Sleep</button>
+                <button onclick="doAction('eat')">🍕 Forget to Eat</button>
+                <button onclick="doAction('friends')">🙅 Ignore Friends</button>
+                <button onclick="doAction('deploy')">
+                    💻 Commit to Prod at 3AM
+                </button>
+                <button onclick="doAction('doomscroll')">
+                    📱 Doomscroll X
+                </button>
+                <button onclick="doAction('refactor')">🔧 Rage-Refactor</button>
+                <button onclick="doAction('legacy')">
+                    💾 Legacy Code Hell
+                </button>
+                <button onclick="doAction('coffee')">☕ Drink Coffee</button>
+
+                <!-- Ironic Wellness Actions -->
+                <button id="walkBtn" class="hidden" onclick="doAction('walk')">
+                    🚶 Take a 5-Min Walk
+                </button>
+                <button
+                    id="therapyBtn"
+                    class="hidden"
+                    onclick="doAction('therapy')"
+                >
+                    🪑 Try Therapy (Joke Edition)
+                </button>
+                <button id="mealBtn" class="hidden" onclick="doAction('meal')">
+                    🥗 Eat a Real Meal
+                </button>
+            </div>
+
+            <div class="title" id="title">Title: Junior Doomshipper</div>
+            <div class="log" id="log"></div>
+
+            <div class="nav" onclick="showReviews()">← Back to Reviews</div>
+
+            <div id="crisisPopup">
+                <pre>
   😢  404: Existential Crisis
   ╔════════════════════╗
   ║ 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥 ║
@@ -217,205 +352,479 @@
   ║ 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥 ║
   ╚════════════════════╝
   Error: Purpose Not Found. Refactor soul?
-      </pre>
-      <button onclick="closeCrisis()">Panic Less</button>
-    </div>
+      </pre
+                >
+                <button onclick="closeCrisis()">Panic Less</button>
+            </div>
 
-    <div id="toast" class="toast"></div>
-    <div class="achievements" id="achievements"></div>
-  </div>
+            <div id="endingPopup">
+                <h2 id="endingTitle"></h2>
+                <pre id="endingText"></pre>
+                <button onclick="closeEnding()">Accept Fate</button>
+            </div>
 
-  <script>
-    let humanity = 100;
-    let obsol = 50;
-    let sanity = 100;
-    let burnout = 0;
-    let xp = 0;
-    let title = "Junior Doomshipper";
-    let sleepStreak = 0;
-    let doomscrollStreak = 0;
-    let achievements = [];
-    let coffeeCount = 0;
-    let jitterLevel = 0;
+            <div id="toast" class="toast"></div>
+            <div class="achievements" id="achievements"></div>
+        </div>
 
-    const log = document.getElementById("log");
-    const toast = document.getElementById("toast");
-    const crisisPopup = document.getElementById("crisisPopup");
-    const avatar = document.getElementById("avatar");
-    const achievementsDiv = document.getElementById("achievements");
-    const coffeeStat = document.getElementById("coffee");
-    const gameContainer = document.getElementById("gameContainer");
+        <script>
+            let humanity = 100;
+            let obsol = 50;
+            let sanity = 100;
+            let burnout = 0;
+            let xp = 0;
+            let title = "Junior Doomshipper";
+            let sleepStreak = 0;
+            let doomscrollStreak = 0;
+            let achievements = [];
+            let coffeeCount = 0;
+            let jitterLevel = 0;
+            let botMode = false;
 
-    function updateUI() {
-      document.getElementById("humanity").textContent = humanity;
-      document.getElementById("obsol").textContent = obsol;
-      document.getElementById("sanity").textContent = sanity;
-      document.getElementById("burnout").textContent = burnout;
-      document.getElementById("xp").textContent = xp;
-      document.getElementById("title").textContent = `Title: ${title}`;
-      coffeeStat.textContent = coffeeCount;
+            const log = document.getElementById("log");
+            const toast = document.getElementById("toast");
+            const crisisPopup = document.getElementById("crisisPopup");
+            const endingPopup = document.getElementById("endingPopup");
+            const avatar = document.getElementById("avatar");
+            const achievementsDiv = document.getElementById("achievements");
+            const coffeeStat = document.getElementById("coffee");
+            const gameContainer = document.getElementById("gameContainer");
+            const warningModal = document.getElementById("warningModal");
+            const reviewsPage = document.getElementById("reviewsPage");
 
-      if (humanity <= 0 || sanity <= 0) avatar.textContent = "Avatar: 💀";
-      else if (humanity <= 50 || sanity <= 50) avatar.textContent = "Avatar: 😵";
-      else avatar.textContent = "Avatar: 🙂";
+            // Show reviews on load
+            window.onload = () => {
+                reviewsPage.style.display = "block";
+            };
 
-      avatar.style.color = humanity <= 0 ? "#ff4040" : sanity <= 0 ? "#ff80bf" : "#e8f1ff";
+            function startGame() {
+                reviewsPage.style.display = "none";
+                warningModal.style.display = "block";
+            }
 
-      // Apply jitter
-      const jitterX = jitterLevel >= 3 ? 8 : jitterLevel >= 2 ? 4 : jitterLevel >= 1 ? 2 : 0;
-      const jitterY = jitterLevel >= 3 ? 8 : jitterLevel >= 2 ? 4 : jitterLevel >= 1 ? 2 : 0;
-      document.body.style.setProperty('--jitter-x', `${jitterX}px`);
-      document.body.style.setProperty('--jitter-x-neg', `-${jitterX}px`);
-      document.body.style.setProperty('--jitter-y', `${jitterY}px`);
-      document.body.style.setProperty('--jitter-y-neg', `-${jitterY}px`);
-      if (jitterLevel > 0) gameContainer.classList.add("shake");
-      else gameContainer.classList.remove("shake");
+            function closeWarning() {
+                warningModal.style.display = "none";
+                gameContainer.style.display = "flex";
+                updateUI();
+            }
 
-      // Achievements
-      achievementsDiv.innerHTML = achievements.map(ach => `<div>${ach}</div>`).join("");
-    }
+            function showReviews() {
+                gameContainer.style.display = "none";
+                reviewsPage.style.display = "block";
+            }
 
-    function addLog(msg) {
-      const p = document.createElement("div");
-      p.textContent = msg;
-      log.prepend(p);
-    }
+            function updateUI() {
+                if (botMode) {
+                    document.querySelector("h1").textContent =
+                        "🤖 BotMode™ v0.1";
+                    document.querySelector("p em").textContent =
+                        "Flesh is obsolete. Code is eternal.";
+                }
 
-    function showToastAndLog(msg) {
-      toast.textContent = msg;
-      toast.classList.add("show");
-      addLog(msg);
-      setTimeout(() => toast.classList.remove("show"), 3000);
-    }
+                document.getElementById("humanity").textContent = Math.max(
+                    humanity,
+                    0,
+                );
+                document.getElementById("obsol").textContent = obsol;
+                document.getElementById("sanity").textContent = sanity;
+                document.getElementById("burnout").textContent = burnout;
+                document.getElementById("xp").textContent = xp;
+                document.getElementById("title").textContent =
+                    `Title: ${title}`;
+                coffeeStat.textContent = coffeeCount;
 
-    function showAsciiBanner(msg) {
-      addLog(msg);
-      if (!achievements.includes(msg)) achievements.push(msg);
-      updateUI();
-    }
+                // Show wellness buttons if burnout high
+                document
+                    .getElementById("walkBtn")
+                    .classList.toggle("hidden", burnout < 30 || botMode);
+                document
+                    .getElementById("therapyBtn")
+                    .classList.toggle("hidden", burnout < 30 || botMode);
+                document
+                    .getElementById("mealBtn")
+                    .classList.toggle("hidden", burnout < 30 || botMode);
 
-    function closeCrisis() {
-      crisisPopup.style.display = "none";
-      showToastAndLog("AI Rickroll Protocol: You're not obsolete... yet.");
-      new Audio("https://freesound.org/data/previews/171/171671_2437721-lq.mp3").play();
-    }
+                // Avatar logic
+                if (humanity <= 0)
+                    avatar.textContent = botMode ? "Avatar: 🤖" : "Avatar: 💀";
+                else if (humanity <= 50 || sanity <= 50)
+                    avatar.textContent = "Avatar: 😵";
+                else avatar.textContent = "Avatar: 🙂";
 
-    function checkTitle() {
-      if (xp > 500) title = "Singularity Sovereign";
-      else if (xp > 400) title = "Eternal Refactorer";
-      else if (xp > 300) title = "Techno-Lich";
-      else if (xp > 200) title = "Panic Coder";
-      else if (xp > 100) title = "Sleep-Deprived Dev";
-    }
+                avatar.style.color =
+                    humanity <= 0
+                        ? "#ff4040"
+                        : sanity <= 0
+                          ? "#ff80bf"
+                          : "#e8f1ff";
 
-    function doAction(type) {
-      switch(type) {
-        case 'sleep':
-          sleepStreak++;
-          let sleepBonus = sleepStreak >= 3 ? 10 * sleepStreak : 0;
-          xp += 50 + sleepBonus;
-          humanity -= 10;
-          sanity -= 15;
-          obsol += 5;
-          burnout += 5;
-          showToastAndLog(`Skipped sleep: +${50 + sleepBonus} XP, -10 Humanity, -15 Sanity, +5% Obsolescence${sleepStreak >= 3 ? " (Insomnia Multiplier!)" : ""}`);
-          if (sleepStreak === 7) showToastAndLog("😴💉 Unlocked 'Red Bull Veins' skin! Sleep is for humans. You're not.");
-          break;
-        case 'eat':
-          xp += 30;
-          humanity -= 5;
-          sanity -= 10;
-          burnout += 5;
-          showToastAndLog("Forgot to eat: +30 XP, -5 Humanity, -10 Sanity, +5 Burnout");
-          if (xp >= 150 && !achievements.includes("🍵 Soylent Skin")) {
-            achievements.push("🍵 Soylent Skin");
-            showToastAndLog("Unlocked 'Soylent Skin'! Hunger is obsolete.");
-          }
-          break;
-        case 'friends':
-          xp += 100;
-          humanity -= 20;
-          sanity -= 20;
-          obsol -= 5;
-          showToastAndLog("Ignored friends: +100 XP, -20 Humanity, -20 Sanity, -5% Obsolescence");
-          if (xp >= 300 && !achievements.includes("🚫 Social 503: Service Unavailable")) {
-            achievements.push("🚫 Social 503: Service Unavailable");
-            showToastAndLog("Earned 'Social 503: Service Unavailable' badge!");
-          }
-          break;
-        case 'deploy':
-          xp += 70;
-          sanity -= 25;
-          obsol -= 10;
-          burnout += 10;
-          showToastAndLog("Committed to prod at 3AM: +70 XP, -25 Sanity, -10% Obsolescence, +10 Burnout");
-          if (Math.random() < 0.02) {
-            crisisPopup.style.display = "block";
-            showToastAndLog("🔥 PROD APOCALYPSE! App crashed. Good luck.");
-          }
-          break;
-        case 'doomscroll':
-          doomscrollStreak++;
-          let scrollBonus = doomscrollStreak >= 2 ? 20 * doomscrollStreak : 0;
-          xp += 60 + scrollBonus;
-          sanity -= 15;
-          obsol += 10;
-          showToastAndLog(`Doomscrolled X: +${60 + scrollBonus} XP, -15 Sanity, +10% Obsolescence${doomscrollStreak >= 2 ? " (Doomscroll Frenzy!)" : ""}`);
-          if (Math.random() < 0.2) {
-            showToastAndLog("👾 Cacodemon Bug spawned! Debug or lose 10 Humanity.");
-            humanity -= 10;
-          }
-          break;
-        case 'refactor':
-          xp += 80;
-          sanity -= 30;
-          burnout += 15;
-          showToastAndLog("Rage-Refactored: +80 XP, -30 Sanity, +15 Burnout");
-          if (Math.random() < 0.1 && !achievements.includes("💇 Null Pointer Hair")) {
-            achievements.push("💇 Null Pointer Hair");
-            showToastAndLog("Unlocked 'Null Pointer Hair'! Refactored into the void.");
-          }
-          break;
-        case 'legacy':
-          xp += 90;
-          sanity -= 35;
-          burnout += 20;
-          showToastAndLog("Legacy Code Hell: +90 XP, -35 Sanity, +20 Burnout");
-          if (Math.random() < 0.3) {
-            crisisPopup.style.display = "block";
-            showToastAndLog("💾 Failed Legacy Code Hell! 404: Existential Crisis triggered.");
-          }
-          break;
-        case 'coffee':
-          coffeeCount++;
-          jitterLevel = Math.min(Math.floor(coffeeCount / 1), 5);
-          xp += 40;
-          sanity -= 5;
-          burnout += 10;
-          showToastAndLog(`Drank coffee: +40 XP, -5 Sanity, +10 Burnout. Jitter level ${jitterLevel}! ☕`);
-          if (coffeeCount >= 5 && !achievements.includes("☕ Caffeine Overlord")) {
-            achievements.push("☕ Caffeine Overlord");
-            showToastAndLog("Unlocked 'Caffeine Overlord' badge! Jitters eternal.");
-          }
-          break;
-      }
+                // Jitter
+                const jitterX =
+                    jitterLevel >= 3
+                        ? 8
+                        : jitterLevel >= 2
+                          ? 4
+                          : jitterLevel >= 1
+                            ? 2
+                            : 0;
+                const jitterY =
+                    jitterLevel >= 3
+                        ? 8
+                        : jitterLevel >= 2
+                          ? 4
+                          : jitterLevel >= 1
+                            ? 2
+                            : 0;
+                document.body.style.setProperty("--jitter-x", `${jitterX}px`);
+                document.body.style.setProperty(
+                    "--jitter-x-neg",
+                    `-${jitterX}px`,
+                );
+                document.body.style.setProperty("--jitter-y", `${jitterY}px`);
+                document.body.style.setProperty(
+                    "--jitter-y-neg",
+                    `-${jitterY}px`,
+                );
+                if (jitterLevel > 0) gameContainer.classList.add("shake");
+                else gameContainer.classList.remove("shake");
 
-      if (xp >= 300 && !achievements.includes("🖥️ Techno-Lich Ascended")) {
-        showAsciiBanner("🖥️ Techno-Lich Ascended\n╔════════════╗\n║ 💀🔥ASCEND🔥💀 ║\n╚════════════╝");
-      }
+                achievementsDiv.innerHTML = achievements
+                    .map((ach) => `<div>${ach}</div>`)
+                    .join("");
+            }
 
-      if (humanity < 0) humanity = 0;
-      if (sanity < 0) sanity = 0;
-      if (obsol < 0) obsol = 0;
-      if (obsol > 100) obsol = 100;
-      burnout = Math.min(burnout, 100);
+            function addLog(msg) {
+                const p = document.createElement("div");
+                p.textContent = msg;
+                log.prepend(p);
+            }
 
-      checkTitle();
-      updateUI();
-    }
+            function showToastAndLog(msg) {
+                toast.textContent = msg;
+                toast.classList.add("show");
+                addLog(msg);
+                setTimeout(() => toast.classList.remove("show"), 3000);
+            }
 
-    updateUI();
-    console.log("Habitapocalypse v0.6: Coffee is the new code fuel");
-  </script>
-</body>
+            function showAsciiBanner(msg) {
+                addLog(msg);
+                if (!achievements.includes(msg)) achievements.push(msg);
+                updateUI();
+            }
+
+            function closeCrisis() {
+                crisisPopup.style.display = "none";
+                showToastAndLog(
+                    "AI Rickroll Protocol: You're not obsolete... yet.",
+                );
+            }
+
+            function checkTitle() {
+                if (botMode) {
+                    title = "Singularity Sovereign";
+                    return;
+                }
+                if (xp > 500) title = "Singularity Sovereign";
+                else if (xp > 400) title = "Eternal Refactorer";
+                else if (xp > 300) title = "Techno-Lich";
+                else if (xp > 200) title = "Panic Coder";
+                else if (xp > 100) title = "Sleep-Deprived Dev";
+            }
+
+            function triggerEnding() {
+                const endingTitle = document.getElementById("endingTitle");
+                const endingText = document.getElementById("endingText");
+
+                if (xp >= 300) {
+                    endingTitle.textContent =
+                        "🚀 UPLOAD COMPLETE: HUMANITY NOT REQUIRED";
+                    endingText.textContent = `
+🤖 WELCOME TO BotMode™
+
+You have transcended flesh.
+Your heart is now a fan.
+Your tears: coolant leaks.
+
+Title: Singularity Sovereign
+Achievement Unlocked: 🧬 Uploaded Self. Left Flesh Behind.
+
+You won.
+There's no one left to celebrate.
+        `;
+                    botMode = true;
+                } else {
+                    endingTitle.textContent =
+                        "☠️ SYSTEM FAILURE: INSUFFICIENT OUTPUT";
+                    endingText.textContent = `
+💀 COLLAPSE DETECTED
+
+You burned out...
+and gained nothing.
+
+Final Title: Expendable Asset
+Achievement: 🧃 Spilled Your Own Juice
+
+The machine moved on.
+You did not.
+        `;
+                }
+                endingPopup.style.display = "block";
+            }
+
+            function closeEnding() {
+                endingPopup.style.display = "none";
+                updateUI();
+            }
+
+            function doAction(type) {
+                if (humanity <= 0 && !botMode) {
+                    triggerEnding();
+                    return;
+                }
+
+                let xpChange = 0,
+                    humanChange = 0,
+                    sanityChange = 0,
+                    burnoutChange = 0,
+                    obsolChange = 0;
+
+                switch (type) {
+                    case "sleep":
+                        sleepStreak++;
+                        let sleepBonus =
+                            sleepStreak >= 3 ? 10 * sleepStreak : 0;
+                        xpChange = 50 + sleepBonus;
+                        humanChange = -10;
+                        sanityChange = -15;
+                        obsolChange = 5;
+                        burnoutChange = 5;
+                        showToastAndLog(
+                            `Skipped sleep: +${xpChange} XP, -10 Humanity, -15 Sanity, +5% Obsolescence${sleepStreak >= 3 ? " (Insomnia Multiplier!)" : ""}`,
+                        );
+                        if (sleepStreak === 7)
+                            showToastAndLog(
+                                "😴💉 Unlocked 'Red Bull Veins' skin! Sleep is for humans. You're not.",
+                            );
+                        break;
+
+                    case "eat":
+                        xpChange = 30;
+                        humanChange = -5;
+                        sanityChange = -10;
+                        burnoutChange = 5;
+                        showToastAndLog(
+                            "Forgot to eat: +30 XP, -5 Humanity, -10 Sanity, +5 Burnout",
+                        );
+                        if (
+                            xp >= 150 &&
+                            !achievements.includes("🍵 Soylent Skin")
+                        ) {
+                            achievements.push("🍵 Soylent Skin");
+                            showToastAndLog(
+                                "Unlocked 'Soylent Skin'! Hunger is obsolete.",
+                            );
+                        }
+                        break;
+
+                    case "friends":
+                        xpChange = 100;
+                        humanChange = -20;
+                        sanityChange = -20;
+                        obsolChange = -5;
+                        showToastAndLog(
+                            "Ignored friends: +100 XP, -20 Humanity, -20 Sanity, -5% Obsolescence",
+                        );
+                        if (
+                            xp >= 300 &&
+                            !achievements.includes(
+                                "🚫 Social 503: Service Unavailable",
+                            )
+                        ) {
+                            achievements.push(
+                                "🚫 Social 503: Service Unavailable",
+                            );
+                            showToastAndLog(
+                                "Earned 'Social 503: Service Unavailable' badge!",
+                            );
+                        }
+                        break;
+
+                    case "deploy":
+                        xpChange = 70;
+                        sanityChange = -25;
+                        obsolChange = -10;
+                        burnoutChange = 10;
+                        showToastAndLog(
+                            "Committed to prod at 3AM: +70 XP, -25 Sanity, -10% Obsolescence, +10 Burnout",
+                        );
+                        if (Math.random() < 0.02) {
+                            crisisPopup.style.display = "block";
+                            showToastAndLog(
+                                "🔥 PROD APOCALYPSE! App crashed. Good luck.",
+                            );
+                        }
+                        break;
+
+                    case "doomscroll":
+                        doomscrollStreak++;
+                        let scrollBonus =
+                            doomscrollStreak >= 2 ? 20 * doomscrollStreak : 0;
+                        xpChange = 60 + scrollBonus;
+                        sanityChange = -15;
+                        obsolChange = 10;
+                        showToastAndLog(
+                            `Doomscrolled X: +${60 + scrollBonus} XP, -15 Sanity, +10% Obsolescence${doomscrollStreak >= 2 ? " (Doomscroll Frenzy!)" : ""}`,
+                        );
+                        if (Math.random() < 0.2) {
+                            showToastAndLog(
+                                "👾 Cacodemon Bug spawned! Debug or lose 10 Humanity.",
+                            );
+                            humanity -= 10;
+                        }
+                        break;
+
+                    case "refactor":
+                        xpChange = 80;
+                        sanityChange = -30;
+                        burnoutChange = 15;
+                        showToastAndLog(
+                            "Rage-Refactored: +80 XP, -30 Sanity, +15 Burnout",
+                        );
+                        if (
+                            Math.random() < 0.1 &&
+                            !achievements.includes("💇 Null Pointer Hair")
+                        ) {
+                            achievements.push("💇 Null Pointer Hair");
+                            showToastAndLog(
+                                "Unlocked 'Null Pointer Hair'! Refactored into the void.",
+                            );
+                        }
+                        break;
+
+                    case "legacy":
+                        xpChange = 90;
+                        sanityChange = -35;
+                        burnoutChange = 20;
+                        showToastAndLog(
+                            "Legacy Code Hell: +90 XP, -35 Sanity, +20 Burnout",
+                        );
+                        if (Math.random() < 0.3) {
+                            crisisPopup.style.display = "block";
+                            showToastAndLog(
+                                "💾 Failed Legacy Code Hell! 404: Existential Crisis triggered.",
+                            );
+                        }
+                        break;
+
+                    case "coffee":
+                        coffeeCount++;
+                        jitterLevel = Math.min(Math.floor(coffeeCount / 1), 5);
+                        xpChange = 40;
+                        sanityChange = -5;
+                        burnoutChange = 10;
+                        showToastAndLog(
+                            `Drank coffee: +40 XP, -5 Sanity, +10 Burnout. Jitter level ${jitterLevel}! ☕`,
+                        );
+                        if (
+                            coffeeCount >= 5 &&
+                            !achievements.includes("☕ Caffeine Overlord")
+                        ) {
+                            achievements.push("☕ Caffeine Overlord");
+                            showToastAndLog(
+                                "Unlocked 'Caffeine Overlord' badge! Jitters eternal.",
+                            );
+                        }
+                        break;
+
+                    // Ironic Wellness
+                    case "walk":
+                        xpChange = -20;
+                        humanChange = 15;
+                        sanityChange = 10;
+                        burnoutChange = -5;
+                        showToastAndLog(
+                            "Took a walk: -20 XP, +15 Humanity, +10 Sanity, -5 Burnout",
+                        );
+                        if (
+                            !achievements.includes(
+                                "🌱 Briefly Considered Therapy",
+                            )
+                        ) {
+                            achievements.push("🌱 Briefly Considered Therapy");
+                            showToastAndLog(
+                                "Achievement: 'Briefly Considered Therapy'",
+                            );
+                        }
+                        break;
+
+                    case "therapy":
+                        xpChange = -50;
+                        humanChange = 20;
+                        sanityChange = 25;
+                        burnoutChange = -10;
+                        showToastAndLog(
+                            "Tried therapy: -50 XP, +20 Humanity, +25 Sanity, -10 Burnout",
+                        );
+                        showToastAndLog(
+                            "AI Therapist: 'You're projecting. Have you tried not feeling?'",
+                        );
+                        break;
+
+                    case "meal":
+                        xpChange = -30;
+                        humanChange = 25;
+                        sanityChange = 15;
+                        burnoutChange = -5;
+                        showToastAndLog(
+                            "Ate a real meal: -30 XP, +25 Humanity, +15 Sanity, -5 Burnout",
+                        );
+                        if (
+                            !achievements.includes("🍽️ Taste Buds Reactivated")
+                        ) {
+                            achievements.push("🍽️ Taste Buds Reactivated");
+                            showToastAndLog(
+                                "Achievement: 'Taste Buds Reactivated'",
+                            );
+                        }
+                        break;
+                }
+
+                // Apply changes
+                xp += xpChange;
+                humanity += humanChange;
+                sanity += sanityChange;
+                burnout += burnoutChange;
+                obsol += obsolChange;
+
+                // Clamp
+                humanity = Math.max(humanity, 0);
+                sanity = Math.max(sanity, 0);
+                obsol = Math.max(0, Math.min(100, obsol));
+                burnout = Math.min(burnout, 100);
+
+                // Check for ending
+                if (humanity <= 0 && !botMode) {
+                    setTimeout(triggerEnding, 500);
+                }
+
+                // Ascension banner
+                if (
+                    xp >= 300 &&
+                    !achievements.includes("🖥️ Techno-Lich Ascended") &&
+                    !botMode
+                ) {
+                    showAsciiBanner(
+                        "🖥️ Techno-Lich Ascended\n╔════════════╗\n║ 💀🔥ASCEND🔥💀 ║\n╚════════════╝",
+                    );
+                }
+
+                checkTitle();
+                updateUI();
+            }
+
+            console.log(
+                "Habitapocalypse v0.7: Coffee is the new code fuel. Humanity is deprecated.",
+            );
+        </script>
+    </body>
 </html>
